@@ -17,11 +17,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Table(name = "users")
-@Entity
-@EntityListeners(value = AuditingEntityListener.class)
-@NoArgsConstructor
-@Getter
+//@Table(name = "users")
+//@Entity
+//@EntityListeners(value = AuditingEntityListener.class)
+//@NoArgsConstructor
+//@Getter
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

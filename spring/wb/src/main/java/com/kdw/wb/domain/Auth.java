@@ -12,43 +12,28 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @EntityListeners(value = AuditingEntityListener.class)
-@Getter
 @NoArgsConstructor
-public class Engineer {
+@Getter
+public class Auth {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	@Column
-	private Integer no;
-	@Column
-	private String name;
-	@Column
-	private String status;
-	@ManyToOne
-	private Company company;
-	@ManyToOne
-	private Sales sales;
+	private String passkey;
 	@CreatedDate
 	private LocalDateTime createdAt;
 	@LastModifiedDate
 	private LocalDateTime updatedAt;
 	
 	@Builder
-	public Engineer(Integer no, String name, String status, Company company, Sales sales) {
+	public Auth(String passkey) {
 		super();
-		this.status = status;
-		this.no = no;
-		this.name = name;
-		this.company = company;
-		this.sales = sales;
+		this.passkey = passkey;
 	}
-	
-	
 }
