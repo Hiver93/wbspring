@@ -7,6 +7,9 @@ import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.kdw.wb.domain.auth.Auth;
+import com.kdw.wb.domain.user.User;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -27,31 +30,35 @@ public class JwtUtil {
 		ACCESS_EXP = accessExp;
 		REFRESH_EXP = refreshExp;
 		SECRET_KEY = Keys.hmacShaKeyFor(SECRET_STR.getBytes());
-		System.out.println(accessExp);
 	}
 	
-	public String generateAccessToken() {
+	public String generateToken(Integer userId, Long exp) {
 		Date issued = new Date();
-		Date expired = new Date(issued.getTime() + ACCESS_EXP);
+		Date expired = new Date(issued.getTime() + exp);
 	
 		return Jwts.builder()
+				.claim("userId", userId)
 				.signWith(SECRET_KEY)
 				.issuedAt(issued)
 				.expiration(expired)
 				.compact();
 	}
 	
-	public String generateRefreshToken() {
-		Date issued = new Date();
-		Date expired = new Date(issued.getTime() + REFRESH_EXP);
+//	public String generateRefreshToken(Auth auth) {
+//		Date issued = new Date();
+//		Date expired = new Date(issued.getTime() + REFRESH_EXP);
+//	
+//		return Jwts.builder()
+//				.claim("userId", auth.getUserId())
+//				.signWith(SECRET_KEY)
+//				.issuedAt(issued)
+//				.expiration(expired)
+//				.compact();
+//	}
 	
-		return Jwts.builder()
-				.signWith(SECRET_KEY)
-				.issuedAt(issued)
-				.expiration(expired)
-				.compact();
+	public Auth getAuth(String token) {
+		return Auth.builder().userId((Integer)this.getClaims(token).get("userId")).build();
 	}
-	
 	
 	private Claims getClaims(String token) {
 		return (Claims)Jwts.parser().verifyWith(SECRET_KEY).build().parse(token).getPayload();

@@ -1,10 +1,12 @@
-package com.kdw.wb.domain;
+package com.kdw.wb.domain.sales;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.kdw.wb.domain.company.Company;
+import com.kdw.wb.domain.engineer.Engineer;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,22 +20,17 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @EntityListeners(value = AuditingEntityListener.class)
-@NoArgsConstructor
 @Getter
-public class Auth {
+@NoArgsConstructor
+public class SalesStatus {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	@Column
-	private String passkey;
-	@CreatedDate
-	private LocalDateTime createdAt;
-	@LastModifiedDate
-	private LocalDateTime updatedAt;
-	
+	private String name;
 	@Builder
-	public Auth(String passkey) {
+	public SalesStatus(String name) {
 		super();
-		this.passkey = passkey;
+		this.name = name;
 	}
 }

@@ -1,11 +1,13 @@
-package com.kdw.wb.service;
+package com.kdw.wb.service.impl;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.kdw.wb.domain.Sales;
+import com.kdw.wb.domain.sales.Sales;
+import com.kdw.wb.domain.sales.SalesStatus;
 import com.kdw.wb.repository.SalesRepository;
+import com.kdw.wb.service.SalesService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,9 +18,9 @@ public class SalesServiceImpl implements SalesService{
 	private final SalesRepository salesRepository;
 
 	@Override
-	public void createSales(String name) {
-		// TODO Auto-generated method stub
-		
+	public void createSales(String name, SalesStatus status) {
+		Sales sales = Sales.builder().name(name).status(status).build();
+		this.salesRepository.save(sales);
 	}
 
 	@Override

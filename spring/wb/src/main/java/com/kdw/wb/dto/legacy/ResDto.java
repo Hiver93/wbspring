@@ -5,9 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.kdw.wb.domain.Company;
-import com.kdw.wb.domain.Engineer;
-import com.kdw.wb.domain.Sales;
+import com.kdw.wb.domain.company.Company;
+import com.kdw.wb.domain.contract.Contract;
+import com.kdw.wb.domain.engineer.Engineer;
+import com.kdw.wb.domain.sales.Sales;
 
 public class ResDto {
 	public static record OverviewItem(
@@ -21,19 +22,22 @@ public class ResDto {
 		
 		public static OverviewItem from(Sales sales) {
 			Map<String,List<Integer>> map = new HashMap<>();
-			sales.getEngineerList().stream().forEach(e->{
-						if(!map.containsKey(e.getStatus())) {
-							map.put(e.getStatus(), new ArrayList<Integer>());
+			sales.getContractList().stream().forEach(c->{
+						Engineer e = c.getEngineer();
+						if(!map.containsKey(e.getStatus().getName())) {
+							map.put(e.getStatus().getName(), new ArrayList<Integer>());
 						}
-						map.get(e.getStatus()).add(e.getId());
+						map.get(e.getStatus().getName()).add(e.getId());
 					});
 			return new OverviewItem(
 					sales.getName(),
-					sales.getEngineerList().stream().map(EngineerItem::from).toList(),
+					sales.getContractList().stream().map(EngineerItem::from).toList(),
 					map,
 					null,
 					null,
-					sales.getCompanyList().stream().map(CompanyItem::from).toList()					
+					sales.getContractList().stream()
+					.map(Contract::getCompany).distinct()
+					.map(CompanyItem::from).toList()					
 					);
 		}
 		private static record EngineerItem(
@@ -41,10 +45,10 @@ public class ResDto {
 				String engineer_name,
 				Integer sales_id,
 				String engineer_status,
-				Integer copany_id
+				Integer company_id
 				) {
-			private static EngineerItem from(Engineer engineer) {
-				return new EngineerItem(engineer.getId(), engineer.getName(), engineer.getSales().getId(), engineer.getStatus(), engineer.getCompany().getId());				
+			private static EngineerItem from(Contract contract) {
+				return new EngineerItem(contract.getEngineer().getId(), contract.getEngineer().getName(), contract.getSales().getId(), contract.getEngineer().getStatus().getName(), contract.getCompany().getId());				
 			}
 		}  
 		
@@ -55,7 +59,9 @@ public class ResDto {
 				) {
 			private static CompanyItem from(Company company) {
 				return new CompanyItem(company.getId(), company.getName(), 
-						company.getEngineerList().stream().map(e->e.getId()).toList()
+						company.getContractList().stream().map(c->
+						c.getEngineer().getId()
+						).toList()
 						);
 			}
 		}

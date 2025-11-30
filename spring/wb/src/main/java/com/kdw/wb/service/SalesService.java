@@ -2,11 +2,12 @@ package com.kdw.wb.service;
 
 import java.util.List;
 
-import com.kdw.wb.domain.Sales;
+import com.kdw.wb.domain.sales.Sales;
+import com.kdw.wb.domain.sales.SalesStatus;
 
 public interface SalesService {
 
-	public void createSales(String name);
+	public void createSales(String name, SalesStatus status);
 	public Sales getSales(Integer salesId);
 	public List<Sales> getSalesList();
 	public void removeSales(Integer salesId);

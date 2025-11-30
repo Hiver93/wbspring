@@ -1,4 +1,4 @@
-package com.kdw.wb.domain;
+package com.kdw.wb.domain.user;
 
 import java.time.LocalDateTime;
 
@@ -12,43 +12,37 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Table(name = "users")
 @Entity
 @EntityListeners(value = AuditingEntityListener.class)
-@Getter
 @NoArgsConstructor
-public class Engineer {
+@Getter
+public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	@Column
-	private Integer no;
+	private String username;
+	@Column
+	private String password;
 	@Column
 	private String name;
-	@Column
-	private String status;
-	@ManyToOne
-	private Company company;
-	@ManyToOne
-	private Sales sales;
 	@CreatedDate
 	private LocalDateTime createdAt;
 	@LastModifiedDate
 	private LocalDateTime updatedAt;
 	
 	@Builder
-	public Engineer(Integer no, String name, String status, Company company, Sales sales) {
+	public User(String username, String password, String name) {
 		super();
-		this.status = status;
-		this.no = no;
+		this.username = username;
+		this.password = password;
 		this.name = name;
-		this.company = company;
-		this.sales = sales;
 	}
-	
 	
 }

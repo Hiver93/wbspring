@@ -2,7 +2,7 @@ package com.kdw.wb.service;
 
 import java.util.List;
 
-import com.kdw.wb.domain.Company;
+import com.kdw.wb.domain.company.Company;
 
 public interface CompanyService {
 	public void createCompany(String name);
