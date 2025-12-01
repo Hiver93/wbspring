@@ -22,9 +22,9 @@ public class SalesServiceImpl implements SalesService{
 	private final SalesStatusRepository salesStatusRepository;
 
 	@Override
-	public void createSales(String name, SalesStatus status) {
+	public Sales createSales(String name, SalesStatus status) {
 		Sales sales = Sales.builder().name(name).status(status).build();
-		this.salesRepository.save(sales);
+		return this.salesRepository.save(sales);
 	}
 
 	@Override
