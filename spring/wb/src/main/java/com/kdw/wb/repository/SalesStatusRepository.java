@@ -5,10 +5,10 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.kdw.wb.domain.sales.Sales;
+import com.kdw.wb.domain.sales.SalesStatus;
 
 @Repository
-public interface SalesRepository extends JpaRepository<Sales, Integer> {
-	
-	public Optional<Sales> findByName(String name);
+public interface SalesStatusRepository extends JpaRepository<SalesStatus, Integer>{
+
+	public Optional<SalesStatus> findByname(String name);
 }

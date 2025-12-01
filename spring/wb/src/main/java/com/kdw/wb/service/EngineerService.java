@@ -10,10 +10,12 @@ import com.kdw.wb.domain.sales.Sales;
 
 public interface EngineerService {
 
-	public void createEngineer(Integer no, String name, EngineerStatus status, EngineerType engineerType);
+	public Engineer createEngineer(Integer no, String name, EngineerStatus status, EngineerType engineerType);
 	public void modifyEngineer(Integer engineerId, String name, Company company, Sales sales);
 	public Engineer getEngineer(Integer engineerId);
 	public List<Engineer> getEngineerListByCompany();
 	public List<Engineer> getEngineerListBySales();
 	public void removeEngineer(Integer engineerId);
+	public EngineerType getEngineerType(String typeName);
+	public EngineerStatus getEngineerStatus(String statusName);
 }

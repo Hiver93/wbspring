@@ -11,6 +11,9 @@ public enum ErrorCode {
 
 	CONTENT_NOT_FOUND(HttpStatus.NOT_FOUND, "コンテンツが見つかりません", "content not found"),
 	USER_NOT_FOUND(HttpStatus.NOT_FOUND, "ユーザーが見つかりません", "user not found"),
+	ENGINEER_NOT_FOUND(HttpStatus.NOT_FOUND, "エンジニアデータが見つかりません", "engineer not found"),
+	SALES_NOT_FOUND(HttpStatus.NOT_FOUND, "営業データが見つかりません", "sales not found"),
+	COMPANY_NOT_FOUND(HttpStatus.NOT_FOUND, "会社データが見つかりません", "company not found"),
 	
 	AUTHENTICATION_REQUIRED(HttpStatus.UNAUTHORIZED, "ログインしてください", "login please"),
 	
@@ -23,6 +26,7 @@ public enum ErrorCode {
 	INVALID_CONTENT_TYPE(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "サポートされていないコンテンツタイプです", "unsupported content type"),
 	
 	PASSKEY_REQUIRED(HttpStatus.BAD_REQUEST, "パスキーが必要です", "passkey is required"),
+	FILE_REQUIRED(HttpStatus.BAD_REQUEST, "ファイルが添付されていません", "file is required"),
 	
 	UNKNOWN_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "システムエラーが発生しました。管理者にお問い合わせください", "unknown server error")
 	;

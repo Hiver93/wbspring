@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.kdw.wb.domain.company.Company;
+import com.kdw.wb.error.ErrorCode;
+import com.kdw.wb.error.WhiteboardException;
 import com.kdw.wb.repository.CompanyRepository;
 import com.kdw.wb.service.CompanyService;
 
@@ -44,6 +46,11 @@ public class CompanyServiceImpl implements CompanyService {
 	public void removeCompany(Integer companyid) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Company getCompany(String name) {
+		return this.companyRepository.findByName(name).orElseThrow(()->{throw new WhiteboardException(ErrorCode.COMPANY_NOT_FOUND);});
 	}
 
 }

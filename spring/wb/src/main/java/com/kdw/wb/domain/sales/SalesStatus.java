@@ -1,12 +1,6 @@
 package com.kdw.wb.domain.sales;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import com.kdw.wb.domain.company.Company;
-import com.kdw.wb.domain.engineer.Engineer;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

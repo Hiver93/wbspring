@@ -10,4 +10,5 @@ public interface CompanyService {
 	public List<Company> getCompanyList();
 	public void modifyCompany(Integer companyId, String name);
 	public void removeCompany(Integer companyid);
+	public Company getCompany(String name);
 }

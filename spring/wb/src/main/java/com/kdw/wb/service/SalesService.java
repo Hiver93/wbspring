@@ -12,4 +12,6 @@ public interface SalesService {
 	public List<Sales> getSalesList();
 	public void removeSales(Integer salesId);
 	public void modifySales(Integer salesId, String name);
+	public SalesStatus getSalesStatus(String statusName);
+	public Sales getSales(String name);
 }

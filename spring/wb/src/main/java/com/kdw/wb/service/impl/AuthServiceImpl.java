@@ -38,7 +38,7 @@ public class AuthServiceImpl implements AuthService {
 	
 	@Override
 	public void setAuthentication(Integer userId) {
-		String access = this.jwtUtil.generateToken(userId, ACCESS_EXP);
+		String access = "Bearer " + this.jwtUtil.generateToken(userId, ACCESS_EXP);
 		String refresh = this.jwtUtil.generateToken(userId, REFRESH_EXP);
 		
 		HttpServletResponse response = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getResponse();
@@ -60,6 +60,8 @@ public class AuthServiceImpl implements AuthService {
 		if(token == null || token.equals("null")) {
 			return false;
 		}
+		
+		token = this.getTokenFromAccessToken(token);
 		
 		try {
 			this.jwtUtil.getAuth(token);
@@ -109,6 +111,7 @@ public class AuthServiceImpl implements AuthService {
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 		
 		String token = request.getHeader("Authorization");
+		token = this.getTokenFromAccessToken(token);
 		
 		if(token == null || token.equals("null")) {
 			throw new WhiteboardException(ErrorCode.AUTHENTICATION_REQUIRED);
@@ -121,6 +124,15 @@ public class AuthServiceImpl implements AuthService {
 		}catch (JwtException e) {
 			throw new WhiteboardException(ErrorCode.INVALID_JWT);
 		}
+	}
+	
+	private String getTokenFromAccessToken(String access) {
+		
+		if(!access.startsWith("Bearer ")) {
+			throw new WhiteboardException(ErrorCode.INVALID_JWT);
+		}
+		
+		return access.split("Bearer ", 1)[1];
 	}
 
 }
