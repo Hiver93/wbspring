@@ -132,7 +132,7 @@ public class AuthServiceImpl implements AuthService {
 			throw new WhiteboardException(ErrorCode.INVALID_JWT);
 		}
 		
-		return access.split("Bearer ", 1)[1];
+		return access.substring(7);
 	}
 
 }
