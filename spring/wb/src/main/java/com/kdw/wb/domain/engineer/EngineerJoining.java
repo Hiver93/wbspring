@@ -16,25 +16,34 @@ import jakarta.persistence.OneToMany;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Entity
 @EntityListeners(value = AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor
-public class EngineerStatus {
+public class EngineerJoining {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	@Column
-	private String name;
+	private String type;
 	@Column
 	private Boolean shift;
-	@OneToMany(mappedBy = "status", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "joining", fetch = FetchType.LAZY)
 	private List<Engineer> engineerList = new ArrayList<>();
 	@Builder
-	public EngineerStatus(String name) {
+	public EngineerJoining(String type, Boolean shift) {
 		super();
-		this.name = name;
+		this.type = type;
+		this.shift = shift;
 	}
 	
+	@Getter
+	@RequiredArgsConstructor
+	public static enum Type{
+		THIS_MONTH("THIS_MONTH"), 
+		NEXT_MONTH("NEXT_MONTH");
+		private final String name;
+	}
 }
