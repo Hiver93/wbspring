@@ -36,10 +36,6 @@ public class Engineer {
 	private EngineerStatus status;
 	@ManyToOne
 	private EngineerType type;
-	@ManyToOne
-	private EngineerRetunee returnee;
-	@ManyToOne
-	private EngineerJoining joining;
 	@OneToOne(mappedBy = "engineer")
 	private Contract contract;
 	@CreatedDate
