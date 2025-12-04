@@ -40,6 +40,8 @@ public class Contract {
 	@ManyToOne
 	private Company company;
 	@Column
+	private Boolean extension;
+	@Column
 	private LocalDateTime startDate;
 	@Column
 	private LocalDateTime endDate;

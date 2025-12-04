@@ -23,18 +23,18 @@ public class AuthController {
 	@PostMapping("/token")
 	public ResponseEntity<BaseResBody<Void>> login(@Valid @RequestBody AuthReqDto.Login dto){
 		this.authFacade.login(dto);
-		return new BaseResBody<Void>(null, "loged in successfully").toResponse(HttpStatus.OK);
+		return new BaseResBody<Void>(null, "認証が成功しました。").toResponse(HttpStatus.OK);
 	}
 	
 	@PostMapping("/token/logout")
 	public ResponseEntity<BaseResBody<Void>> logout(){
 		this.authFacade.logout();
-		return new BaseResBody<Void>(null, "loged out successfully").toResponse(HttpStatus.OK);
+		return new BaseResBody<Void>(null, "認証情報が削除されました。").toResponse(HttpStatus.OK);
 	}
 	
 	@PostMapping("/token/refresh")
 	public ResponseEntity<BaseResBody<Void>> refresh(){
 		this.authFacade.refresh();
-		return new BaseResBody<Void>(null, "refreshed successfully").toResponse(HttpStatus.OK);
+		return new BaseResBody<Void>(null, "認証情報を更新しました。").toResponse(HttpStatus.OK);
 	}
 }

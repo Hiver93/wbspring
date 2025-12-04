@@ -6,17 +6,14 @@ import lombok.Getter;
 @Getter
 public class BaseErrorData {
 
-	private final String message;
 	private final String detail;
 	
 	@Builder
-	public BaseErrorData(String message, String detail) {
-		this.message = message;
+	public BaseErrorData(String detail) {
 		this.detail = detail;
 	}
 	
 	public BaseErrorData(ErrorCode errorCode) {
-		this.message = errorCode.getMessage();
 		this.detail = errorCode.getDetail();
 	}
 }

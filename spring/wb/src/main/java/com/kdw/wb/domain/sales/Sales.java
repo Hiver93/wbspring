@@ -32,6 +32,8 @@ public class Sales {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	@Column(unique=true)
+	private Integer no;
 	@Column
 	private String name;
 	@OneToMany(mappedBy = "sales", fetch = FetchType.LAZY)

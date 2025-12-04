@@ -14,9 +14,9 @@ public class CompanyReqDto {
 	@NoArgsConstructor
 	public static class Post{
 		
-		@NotBlank(message = "name is required")
-		private String name;
-		@NotBlank(message = "password is required")
-		private String salesStatus;
+		@NotBlank(message = "companyNo is required")
+		private Integer companyNo;
+		@NotBlank(message = "companyName is required")
+		private String companyName;
 	}
 }

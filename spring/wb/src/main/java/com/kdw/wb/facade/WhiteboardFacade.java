@@ -7,13 +7,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.kdw.wb.domain.contract.ContractInfo;
 import com.kdw.wb.domain.engineer.Engineer;
-import com.kdw.wb.domain.engineer.EngineerStatus;
 import com.kdw.wb.domain.engineer.EngineerType;
 import com.kdw.wb.domain.sales.SalesStatus;
 import com.kdw.wb.dto.legacy.ResDto;
 import com.kdw.wb.error.ErrorCode;
 import com.kdw.wb.error.WhiteboardException;
-import com.kdw.wb.repository.UserRepository;
 import com.kdw.wb.service.AuthService;
 import com.kdw.wb.service.CompanyService;
 import com.kdw.wb.service.ContractService;
@@ -53,7 +51,6 @@ public class WhiteboardFacade {
 		List<ContractInfo> contractInfoList = this.fileService.convertFromCsv(file);
 		
 		SalesStatus salesStatus = this.salesService.getSalesStatus("在職中");
-		EngineerStatus engineerStatus = this.engineerService.getEngineerStatus("勤務中");
 		EngineerType engineerType = this.engineerService.getEngineerType("正社員");
 		
 		contractInfoList.stream().map(ContractInfo::getSalesName).distinct()
@@ -64,7 +61,7 @@ public class WhiteboardFacade {
 		
 		contractInfoList.stream()
 		.forEach((info)->{
-			Engineer engineer = this.engineerService.createEngineer(0, info.getEngineerName(), engineerStatus, engineerType);
+			Engineer engineer = this.engineerService.createEngineer(0, info.getEngineerName(), engineerType);
 			this.contractService.createContract(
 					engineer, 
 					salesService.getSales(info.getSalesName()), 

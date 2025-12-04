@@ -15,13 +15,29 @@ public class EngineerReqDto {
 	@NoArgsConstructor
 	public static class Post{
 		
-		@NotBlank(message = "name is required")
-		private String name;
 		@NotNull(message = "engineerNo is required")
 		private Integer engineerNo;
-		@NotBlank(message = "engineerStatus is required")
-		private String engineerStatus;
-		@NotBlank(message = "engineerStatus is required")
+		@NotBlank(message = "name is required")
+		private String name;
+		@NotBlank(message = "engineerType is required")
 		private String engineerType;
+		private String joiningDate;
+		private String leavingDate;
+	}
+	
+	@Validated
+	@Getter
+	@Setter
+	@NoArgsConstructor
+	public static class Put{
+		
+		@NotNull(message = "engineerNo is required")
+		private Integer engineerNo;
+		@NotBlank(message = "name is required")
+		private String engineerName;
+		@NotBlank(message = "engineerType is required")
+		private String engineerType;
+		private String joiningDate;
+		private String leavingDate;
 	}
 }

@@ -26,42 +26,42 @@ public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<BaseResBody<BaseErrorData>> handleException(MethodArgumentNotValidException ex){
-		return new BaseResBody<>(new BaseErrorData("システムエラーが発生しました。管理者にお問い合わせください",ex.getFieldError().getDefaultMessage()), ex.getFieldError().getDefaultMessage())
+		return new BaseResBody<>(new BaseErrorData(ex.getFieldError().getDefaultMessage()), "システムエラーが発生しました。管理者にお問い合わせください")
 				.toResponse(HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	public ResponseEntity<BaseResBody<BaseErrorData>> handleException(MethodArgumentTypeMismatchException ex){
-		return new BaseResBody<>(new BaseErrorData("システムエラーが発生しました。管理者にお問い合わせください",ex.getPropertyName() + " require " + ex.getRequiredType().getSimpleName()), 
-				ex.getPropertyName() + " require " + ex.getRequiredType().getSimpleName())
+		return new BaseResBody<>(new BaseErrorData(ex.getPropertyName() + " require " + ex.getRequiredType().getSimpleName()), 
+				"システムエラーが発生しました。管理者にお問い合わせください")
 				.toResponse(HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<BaseResBody<BaseErrorData>> handleException(HttpMessageNotReadableException ex){
-		return new BaseResBody<>(new BaseErrorData("システムエラーが発生しました。管理者にお問い合わせください","invalid request body. check format"),
-				"invalid request body. check format")
+		return new BaseResBody<>(new BaseErrorData("invalid request body. check format"),
+				"システムエラーが発生しました。管理者にお問い合わせください")
 				.toResponse(HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler(MissingServletRequestParameterException.class)
 	public ResponseEntity<BaseResBody<BaseErrorData>> handleException(MissingServletRequestParameterException ex){
-		return new BaseResBody<>(new BaseErrorData("システムエラーが発生しました。管理者にお問い合わせください",ex.getMessage()), 
-				ex.getMessage())
+		return new BaseResBody<>(new BaseErrorData(ex.getMessage()), 
+				"システムエラーが発生しました。管理者にお問い合わせください")
 				.toResponse(HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler(NoResourceFoundException.class)
 	public ResponseEntity<BaseResBody<BaseErrorData>> handleException(NoResourceFoundException ex){
-		return new BaseResBody<>(new BaseErrorData("システムエラーが発生しました。管理者にお問い合わせください","check url"), 
-				"check url")
+		return new BaseResBody<>(new BaseErrorData("check url"), 
+				"システムエラーが発生しました。管理者にお問い合わせください")
 				.toResponse(HttpStatus.NOT_FOUND);
 	}
 	
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<BaseResBody<BaseErrorData>> handleException(Exception ex){
 		log.error(ex.getMessage(), ex);
-		return new BaseResBody<>(new BaseErrorData(ErrorCode.UNKNOWN_ERROR), "unknown error. contact admin.")
+		return new BaseResBody<>(new BaseErrorData(ErrorCode.UNKNOWN_ERROR), "システムエラーが発生しました。管理者にお問い合わせください")
 				.toResponse(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

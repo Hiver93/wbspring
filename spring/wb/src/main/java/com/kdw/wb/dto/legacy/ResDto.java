@@ -24,10 +24,10 @@ public class ResDto {
 			Map<String,List<Integer>> map = new HashMap<>();
 			sales.getContractList().stream().forEach(c->{
 						Engineer e = c.getEngineer();
-						if(!map.containsKey(e.getStatus().getName())) {
-							map.put(e.getStatus().getName(), new ArrayList<Integer>());
+						if(!map.containsKey("unknown")) {
+							map.put("unknown", new ArrayList<Integer>());
 						}
-						map.get(e.getStatus().getName()).add(e.getId());
+						map.get("unknown").add(e.getId());
 					});
 			return new OverviewItem(
 					sales.getName(),
@@ -48,7 +48,7 @@ public class ResDto {
 				Integer company_id
 				) {
 			private static EngineerItem from(Contract contract) {
-				return new EngineerItem(contract.getEngineer().getId(), contract.getEngineer().getName(), contract.getSales().getId(), contract.getEngineer().getStatus().getName(), contract.getCompany().getId());				
+				return new EngineerItem(contract.getEngineer().getId(), contract.getEngineer().getName(), contract.getSales().getId(), "unknown", contract.getCompany().getId());				
 			}
 		}  
 		
