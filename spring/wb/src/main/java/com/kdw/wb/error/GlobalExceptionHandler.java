@@ -3,6 +3,7 @@ package com.kdw.wb.error;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -47,6 +48,13 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(MissingServletRequestParameterException.class)
 	public ResponseEntity<BaseResBody<BaseErrorData>> handleException(MissingServletRequestParameterException ex){
 		return new BaseResBody<>(new BaseErrorData(ex.getMessage()), 
+				"システムエラーが発生しました。管理者にお問い合わせください")
+				.toResponse(HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+	public ResponseEntity<BaseResBody<BaseErrorData>> handleException(HttpRequestMethodNotSupportedException ex){
+		return new BaseResBody<>(new BaseErrorData(ex.getMessage()),
 				"システムエラーが発生しました。管理者にお問い合わせください")
 				.toResponse(HttpStatus.BAD_REQUEST);
 	}
