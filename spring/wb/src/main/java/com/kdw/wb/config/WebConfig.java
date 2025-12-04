@@ -13,10 +13,12 @@ public class WebConfig implements WebMvcConfigurer {
 		registry.addMapping("/**")
 		.allowCredentials(true)
 		.allowedMethods("*")
-		.allowedOrigins("http://localhost:5500",
-				"http://127.0.0.1:5500",
-				"http://localhost:5173",
-				"http://127.0.0.1:5173",
-				"http://confront:5173");
+//		.allowedOrigins("http://localhost:5500",
+//				"http://127.0.0.1:5500",
+//				"http://localhost:5173",
+//				"http://127.0.0.1:5173",
+//				"http://confront:5173")
+		.allowedOriginPatterns("*")
+		.allowedHeaders("*");
 	}
 }
