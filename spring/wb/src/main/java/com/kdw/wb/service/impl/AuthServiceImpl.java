@@ -26,14 +26,20 @@ public class AuthServiceImpl implements AuthService {
 	private final long ACCESS_EXP;
 	private final long REFRESH_EXP;
 	private final JwtUtil jwtUtil;
+	private final boolean httpOnly;
+	private final boolean secure;
 	
 	public AuthServiceImpl( 
 			JwtUtil jwtUtil,
 			@Value("${jwt.properties.access-token-expiration-time-in-milliseconds}")long accessExp,
-			@Value("${jwt.properties.access-token-expiration-time-in-milliseconds}")long refreshExp) {
+			@Value("${jwt.properties.access-token-expiration-time-in-milliseconds}")long refreshExp,
+			@Value("${server.servlet.session.cookie.http-only}") boolean httpOnly,
+			@Value("${server.servlet.session.cookie.secure}") boolean secure) {
 		this.ACCESS_EXP = accessExp;
 		this.REFRESH_EXP = refreshExp;
 		this.jwtUtil = jwtUtil;
+		this.httpOnly = httpOnly;
+		this.secure = secure;
 	}
 	
 	@Override
@@ -45,8 +51,8 @@ public class AuthServiceImpl implements AuthService {
 		
 		Cookie cookie = new Cookie("refresh", refresh);
 		cookie.setPath("/");
-		cookie.setHttpOnly(true);
-		cookie.setSecure(true);
+		cookie.setHttpOnly(this.httpOnly);
+		cookie.setSecure(this.secure);
 		
 		response.addCookie(cookie);
 		response.setHeader("Authorization", access);
@@ -90,6 +96,10 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public void refreshAuthentication() {
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
+		
+		if(request.getCookies() == null) {
+			throw new WhiteboardException(ErrorCode.AUTHENTICATION_REQUIRED);
+		}
 		
 		String token = Stream.of(request.getCookies())
 				.filter(c->c.getName().equals("refresh"))
