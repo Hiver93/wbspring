@@ -18,12 +18,11 @@ import lombok.RequiredArgsConstructor;
 public class ContractServiceImpl implements ContractService {
 
 	private final ContractRepository contractRepository;
-	
+
 	@Override
 	public void createContract(Engineer engineer, Sales sales, Company company, LocalDateTime startDate,
-			LocalDateTime endDate) {
-		Contract contract = Contract.builder().engineer(engineer).sales(sales).company(company).startDate(startDate).endDate(endDate).build();
+			LocalDateTime endDate, boolean selfContracting) {
+		Contract contract = Contract.builder().engineer(engineer).sales(sales).company(company).startDate(startDate).endDate(endDate).selfContracting(sales).build();
 		this.contractRepository.save(contract);
 	}
-
 }

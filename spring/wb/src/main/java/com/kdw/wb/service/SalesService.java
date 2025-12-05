@@ -7,7 +7,7 @@ import com.kdw.wb.domain.sales.SalesStatus;
 
 public interface SalesService {
 
-	public Sales createSales(String name, SalesStatus status);
+	public Sales createSales(Integer no, String name, SalesStatus status);
 	public Sales getSales(Integer salesId);
 	public List<Sales> getSalesList();
 	public void removeSales(Integer salesId);

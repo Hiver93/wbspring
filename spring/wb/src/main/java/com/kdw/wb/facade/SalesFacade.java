@@ -24,6 +24,6 @@ public class SalesFacade {
 			throw new WhiteboardException(ErrorCode.AUTHENTICATION_REQUIRED);
 		}
 		SalesStatus status = this.salesService.getSalesStatus("在職中");
-		return SalesResDto.Created.from(this.salesService.createSales(dto.getName(), status));
+		return SalesResDto.Created.from(this.salesService.createSales(dto.getNo(), dto.getName(), status));
 	}
 }

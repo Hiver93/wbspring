@@ -45,8 +45,9 @@ public class Company {
 	private LocalDateTime updatedAt;
 	
 	@Builder
-	public Company(String name) {
+	public Company(Integer no, String name) {
 		super();
+		this.no = no;
 		this.name = name;
 	}
 	

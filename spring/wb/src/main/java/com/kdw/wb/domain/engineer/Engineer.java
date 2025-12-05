@@ -1,6 +1,7 @@
 package com.kdw.wb.domain.engineer;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -15,7 +16,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,24 +33,26 @@ public class Engineer {
 	private Integer no;
 	@Column
 	private String name;
+	@Column
+	private Boolean companyHouse;
 	@ManyToOne
 	private EngineerType type;
 	@Column
 	private LocalDateTime joiningDate;
 	@Column
 	private LocalDateTime leavingDate;
-	@OneToOne(mappedBy = "engineer")
-	private Contract contract;
+	@OneToMany(mappedBy = "engineer")
+	private List<Contract> contractList;
 	@CreatedDate
 	private LocalDateTime createdAt;
 	@LastModifiedDate
 	private LocalDateTime updatedAt;
 	@Builder
-	public Engineer(Integer no, String name, EngineerType type, Contract contract) {
+	public Engineer(Integer no, String name, EngineerType type, Boolean companyHouse) {
 		super();
 		this.no = no;
 		this.name = name;
 		this.type = type;
-		this.contract = contract;
+		this.companyHouse = companyHouse;
 	}
 }

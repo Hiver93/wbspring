@@ -26,7 +26,7 @@ public class WhiteBoardController {
 		return this.whiteboardFacade.getOverview();
 	}
 	
-	@PutMapping("/csv")
+	@PutMapping("/overview")
 	public ResponseEntity<BaseResBody<Void>> postWhiteboard(
 			@RequestParam("file") MultipartFile file
 			){

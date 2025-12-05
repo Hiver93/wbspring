@@ -24,8 +24,8 @@ public class EngineerServiceImple implements EngineerService{
 	private final EngineerTypeRepository engineerTypeRepository;
 	
 	@Override
-	public Engineer createEngineer(Integer no, String name, EngineerType engineerType) {
-		Engineer engineer = Engineer.builder().no(no).name(name).type(engineerType).build();
+	public Engineer createEngineer(Integer no, String name, EngineerType engineerType, Boolean companyHouse) {
+		Engineer engineer = Engineer.builder().no(no).name(name).type(engineerType).companyHouse(companyHouse).build();
 		return this.engineerRepository.save(engineer);
 	}
 
@@ -62,6 +62,16 @@ public class EngineerServiceImple implements EngineerService{
 	@Override
 	public EngineerType getEngineerType(String typeName) {
 		return this.engineerTypeRepository.findByName(typeName).orElseThrow(()->{throw new WhiteboardException(ErrorCode.CONTENT_NOT_FOUND);});
+	}
+
+	@Override
+	public List<Engineer> getEngineerList() {
+		return this.engineerRepository.findAll();
+	}
+
+	@Override
+	public Engineer getEngineerByNo(Integer engineerNo) {
+		return this.engineerRepository.findByNo(engineerNo).orElseThrow(()->{throw new WhiteboardException(ErrorCode.ENGINEER_NOT_FOUND);});
 	}
 
 }

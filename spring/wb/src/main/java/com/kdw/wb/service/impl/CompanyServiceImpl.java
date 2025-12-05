@@ -19,8 +19,8 @@ public class CompanyServiceImpl implements CompanyService {
 	private final CompanyRepository companyRepository;
 	
 	@Override
-	public void createCompany(String name) {
-		Company company = Company.builder().name(name).build();
+	public void createCompany(Integer no, String name) {
+		Company company = Company.builder().no(no).name(name).build();
 		this.companyRepository.save(company);
 	}
 
@@ -50,7 +50,23 @@ public class CompanyServiceImpl implements CompanyService {
 
 	@Override
 	public Company getCompany(String name) {
-		return this.companyRepository.findByName(name).orElseThrow(()->{throw new WhiteboardException(ErrorCode.COMPANY_NOT_FOUND);});
+		try {
+		return this.companyRepository.findByName(name).orElseThrow(()->{
+			System.out.println(name);
+			throw new WhiteboardException(ErrorCode.COMPANY_NOT_FOUND);
+			});
+		}catch(Exception e) {
+			System.out.println(name);
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	public Company getCompanyByNo(Integer companyNo) {
+		return this.companyRepository.findByNo(companyNo).orElseThrow(()->{
+			System.out.println(companyNo);
+			throw new WhiteboardException(ErrorCode.COMPANY_NOT_FOUND);
+			});
 	}
 
 }

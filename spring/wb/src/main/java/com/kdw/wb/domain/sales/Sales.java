@@ -47,8 +47,9 @@ public class Sales {
 	@LastModifiedDate
 	private LocalDateTime updatedAt;
 	@Builder
-	public Sales(String name, SalesStatus status) {
+	public Sales(Integer no, String name, SalesStatus status) {
 		super();
+		this.no = no;
 		this.name = name;
 		this.status = status;
 	}

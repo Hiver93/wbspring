@@ -23,6 +23,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @Service
 public class AuthServiceImpl implements AuthService {
 
+	private final String cookiePath = "/";
 	private final long ACCESS_EXP;
 	private final long REFRESH_EXP;
 	private final JwtUtil jwtUtil;

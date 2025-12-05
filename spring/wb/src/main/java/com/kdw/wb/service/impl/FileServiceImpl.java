@@ -41,11 +41,17 @@ public class FileServiceImpl implements FileService{
 		    csvReader.forEach(line -> {
 		    	String[] strs = line;
 		    	list.add(ContractInfo.builder()
-		    			.companyName(strs[0])
-		    			.engineerName(strs[1])
-		    			.salesName(strs[2])
-		    			.startDate(strs[3])
-		    			.endDate(strs[4])
+		    			.companyNo(strs[0])
+		    			.companyName(strs[1])
+		    			.engineerNo(strs[2])
+		    			.engineerName(strs[3])
+		    			.salesNo(strs[4])
+		    			.salesName(strs[5])
+		    			.startDate(strs[6])
+		    			.endDate(strs[7])
+		    			.type(strs[8])
+		    			.companyHouse(strs[9])
+		    			.takeover(strs[10])
 		    			.build());
 		    });
 		  list.stream().forEach(System.out::println);
