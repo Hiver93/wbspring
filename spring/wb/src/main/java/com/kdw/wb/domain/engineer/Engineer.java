@@ -1,6 +1,9 @@
 package com.kdw.wb.domain.engineer;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -42,7 +45,7 @@ public class Engineer {
 	@Column
 	private LocalDateTime leavingDate;
 	@OneToMany(mappedBy = "engineer")
-	private List<Contract> contractList;
+	private List<Contract> contractList = new ArrayList<>();
 	@CreatedDate
 	private LocalDateTime createdAt;
 	@LastModifiedDate
@@ -54,5 +57,39 @@ public class Engineer {
 		this.name = name;
 		this.type = type;
 		this.companyHouse = companyHouse;
+	}
+
+	
+	// 해당월말에 유지되는 계약이 있는지?
+	public boolean hasContractLastDayOf(YearMonth month) {
+		
+		return this.getContractList().stream().anyMatch(c->{
+			YearMonth startMonth = YearMonth.from(c.getStartDate());
+			YearMonth endMonth = YearMonth.from(c.getEndDate());
+			return (startMonth.equals(month) && !endMonth.equals(month))
+					|| (startMonth.isBefore(month) && endMonth.isAfter(month));
+		});
+	}
+	
+	// 해당일에 유지되는 계약이 있는지?
+	public boolean hasContract(LocalDate date) {
+		return this.getContractList().stream().anyMatch(c->{
+			LocalDate startDate = c.getStartDate().toLocalDate();
+			LocalDate endDate = c.getEndDate().toLocalDate();
+			return (startDate.equals(date))
+					|| (startDate.isBefore(date) && endDate.isAfter(date));
+		});
+	}
+	
+	// 해당월말에 회사에 고용된 상태인가
+	public boolean isEmployedLastDayOf(YearMonth month) {
+		return this.getLeavingDate() == null 
+				|| YearMonth.from(this.getLeavingDate()).isAfter(month);
+	}
+	
+	// 해당일에 회사에 고용된 상태인가
+	public boolean isEmployed(LocalDate date) {
+		return this.getLeavingDate() == null
+				|| this.getLeavingDate().toLocalDate().isAfter(date);
 	}
 }
