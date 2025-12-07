@@ -2,6 +2,8 @@ package com.kdw.wb.dto.response;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
@@ -50,178 +52,97 @@ public class WhiteboardResDto {
 	            Integer weekOverWeekChange
 				) {
 			private static Summary from(List<Engineer> engineerList) {
-				LocalDateTime today = LocalDateTime.now();
-				LocalDate localDate = today.toLocalDate();
-				LocalDate lastDay = localDate.with(TemporalAdjusters.lastDayOfMonth());
-				String date = "2025-12-05";
+				LocalDate today = LocalDate.now();
+				String date = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 			
 				// 현재인원 : 취없일 정보 x, 취업일이 해당 날과 같거나 빠름, 퇴사일이 해당일보다 늦음
-				List<Engineer> currentEngineerList = engineerList.stream().filter(e->{
-					LocalDateTime joiningDate = e.getJoiningDate();
-					if(joiningDate == null)
-						return true;
-					if(joiningDate.toLocalDate().isEqual(localDate) || joiningDate.toLocalDate().isBefore(localDate)) {
-						return true;
-					}
-					if(joiningDate.toLocalDate().isAfter(localDate)) {
-						return true;
-					}
-					return false;
-				}).toList();
+				List<Engineer> currentEngineerList = engineerList.stream().filter(e->e.isEmployed(today)).toList();
 				
-				// 현재인원 : 취없일 정보 x, 취업일이 해당 날과 같거나 빠름, 퇴사일이 해당일보다 늦음
+				// 현재인원 : 취업일 정보 x, 취업일이 해당 날과 같거나 빠름, 퇴사일이 해당일보다 늦음
 				Integer currentHeadCount = currentEngineerList.size();
 				
-				// 말일인원 : 취없일 정보 x, 취업일이 해당 날과 같거나 빠름, 퇴사일이 해당일보다 늦음
-				Integer endOfMonthHeadCount = (int)engineerList.stream().filter(e->{
-					LocalDateTime joiningDate = e.getJoiningDate();
-					if(joiningDate == null)
-						return true;
-					if(joiningDate.toLocalDate().isEqual(lastDay.plusMonths(1)) || joiningDate.toLocalDate().isBefore(lastDay)) {
-						return true;
-					}
-					if(joiningDate.toLocalDate().isAfter(lastDay)) {
-						return true;
-					}
-					return false;
-				}).count();
+				// 말일인원 : 취업일 정보 x, 취업일이 해당 월말과 같거나 빠름, 퇴사일이 월말보다 늦음
+				List<Engineer> endOfMonthEngineerList = engineerList.stream().filter(e->e.isEmployedLastDayOf(YearMonth.from(today))).toList();
+				Integer endOfMonthHeadCount = endOfMonthEngineerList.size();
 				
-				// 다음달말일인원 : 취없일 정보 x, 취업일이 해당 날과 같거나 빠름, 퇴사일이 해당일보다 늦음
-				Integer endOfNextMonthHeadCount = (int)engineerList.stream().filter(e->{
-					LocalDateTime joiningDate = e.getJoiningDate();
-					LocalDate nextLastDay = lastDay.plusMonths(1);
-					if(joiningDate == null)
-						return true;
-					if(joiningDate.toLocalDate().isEqual(nextLastDay) || joiningDate.toLocalDate().isBefore(nextLastDay)) {
-						return true;
-					}
-					if(joiningDate.toLocalDate().isAfter(nextLastDay)) {
-						return true;
-					}
-					return false;
-				}).count();
+				// 다음달말일인원 : 취업일 정보 x, 취업일이 해당 내월말과 같거나 이름, 퇴사일이 해당내월말보다 늦음
+				List<Engineer> endOfNextMonthEngineerList = engineerList.stream().filter(e->e.isEmployedLastDayOf(YearMonth.from(today).plusMonths(1))).toList();
+				Integer endOfNextMonthHeadCount = endOfNextMonthEngineerList.size();
 				
-				// 이번달 인원 
-				Integer geCount = (int)currentEngineerList.stream().filter(e->{
-					if(e.getType().getName().equals("GE")) {
-						return true;
-					}
-					return false;
-				}).count();
+				// 현재 이번달 GE인원 
+				Integer geCount = (int)currentEngineerList.stream().filter(e->
+					e.isType("GE")
+				).count();
 				
-				// 월내입장 : 이번달에 계약이 있고, 계약 날이 오늘 이후인 엔지니어
-				Integer remainingEntriesThisMonth = (int)engineerList.stream().filter(e->{
-					if(e.getContract() != null) {
-						if(e.getContract().getStartDate().getMonth().equals(today.getMonth()) && e.getContract().getStartDate().isAfter(today)) {
-							return true;
-						}
-					}
-					return false;
-				}).count();
-				
-				// 월내퇴장 : 이번달에 계약이 끝나고, 계약이 끝나는 날이 오늘 이후인 엔지니어
-				Integer remainingExitsThisMonth = (int)engineerList.stream().filter(e->{
-					if(e.getContract() != null) {
-						if(e.getContract().getEndDate().getMonth().equals(today.getMonth()) &&  e.getContract().getStartDate().isAfter(today)) {
-							return true;
-						}
-					}
-					return false;
-				}).count();
+				// 월내입장(남은인원) : 이번달에 계약이 있고, 계약 날이 오늘 이후인 엔지니어
+				Integer remainingEntriesThisMonth = (int)engineerList.stream().filter(e->
+					!e.hasContract(today) && e.hasContractLastDayOf(YearMonth.from(today))
+				).count();
+						
+				// 월내퇴장(남은인원) : 이번달에 계약이 끝나고, 계약이 끝나는 날이 오늘 이후인 엔지니어 (시프트 결정은 포함하지 않음)
+				Integer remainingExitsThisMonth = (int)engineerList.stream().filter(e->
+					!e.hasContract(YearMonth.from(today).plusMonths(1).atDay(1)) && e.hasContract(today)
+				).count();
 				
 				
 				// 대기자 : 계약이 없는 엔지니어, 계약이 해당일 이후인 엔지니어
-				List<Engineer> standbyEngineer = currentEngineerList.stream().filter(e->{
-	            	if(e.getContract() == null || e.getContract().getStartDate().isAfter(today)) {
-	            		return true;
-	            	}
-	            	return false;
-	            }).toList(); 
+				List<Engineer> standbyEngineerList = currentEngineerList.stream().filter(e->
+					!e.hasContract(today)
+				).toList(); 
 				
-	            Integer standbyCount = standbyEngineer.size();
-	            Integer standbyUndecidedCount = (int)standbyEngineer.stream().filter(e->{
-	            	if(e.getContract() == null) {
-	            		return true;
-	            	}
-	            	return false;
-	            }).count();
-	            Integer standbyGeCount = (int)standbyEngineer.stream().filter(e->{
-	            	if(e.getContract() == null && e.getType().getName().equals("GE")) {
-	            		return true;
-	            	}
-	            	return false;
-	            }).count();
+	            Integer standbyCount = standbyEngineerList.size();
 	            
-	            // 복사자
-	            List<Engineer> returneeList = engineerList.stream().filter(e->{
-	            	if(e.getContract() != null) {
-	            		if(e.getContract().getEndDate().getMonth().equals(today.getMonth())) {
-	            			return true;
-	            		}
-	            	}
-	            	return false;
-	            }).toList();
+	            List<Engineer> standbyUndecidedEngineerList = standbyEngineerList.stream().filter(e->
+	            	!e.hasContractAfter(today)
+	            ).toList();
+	            // 계약이 없는 엔지니어
+	            Integer standbyUndecidedCount = standbyUndecidedEngineerList.size();
+	            
+	            // 계약이 없는 엔지니어 중 GE
+	            Integer standbyGeCount = (int)standbyEngineerList.stream().filter(e->
+	            	e.isType("GE")
+	            ).count();
+	            
+	            // 복사자 (계약이 이번달 끝나는 엔지니어)
+	            List<Engineer> returneeList = engineerList.stream().filter(e->
+	            	e.isRetuneeAt(YearMonth.from(today))
+	            ).toList();
 	            
 	            // 복사자
 	            Integer returneesThisMonth = returneeList.size();
 
 	            // 복사자 중 계약이 잡힌 인원
-	            Integer shiftDecidedCount = (int)returneeList.stream().filter(e->{
-	            	if(!e.getContract().getExtension()) {
-	            		return true;
-	            	}
-	            	return false;
-	            }).count();
-	            Integer shiftExtensionCount = 0;
+	            Integer shiftDecidedCount = (int)returneeList.stream().filter(e->
+	            	e.hasContractAfter(today) 
+	            	|| e.hasExtensionIn(YearMonth.from(today)) 
+	            ).count();
+	            
+	            Integer shiftExtensionCount = (int)returneeList.stream().filter(e->
+	            	e.hasExtensionIn(YearMonth.from(today)) 
+	            ).count();
 	            // 복사자 중 타거점이동
 	            Integer transferCount = 0;
 	            // 복사자 중 퇴직
-	            Integer resignedCount = (int)returneeList.stream().filter(e->{
-	            	if(e.getLeavingDate().getMonth().equals(today.getMonth())) {
-	            		return true;
-	            	}
-	            	return false;
-	            }).count();
+	            Integer resignedCount = (int)returneeList.stream().filter(e->
+	            	e.getLeavingDate() != null && YearMonth.from(e.getLeavingDate()).equals(YearMonth.from(today))
+	            ).count();
 	            // 복사자 중 타거점인원과 퇴직과 계약 잡힌 인원을 제외
 	            Integer shiftUndecidedDecisions = returneesThisMonth - shiftDecidedCount - resignedCount - transferCount;
 	            
+	            List<Engineer> joinThisMonthEngineerList = engineerList.stream().filter(e-> e.getJoiningDate() != null && YearMonth.from(e.getJoiningDate()).equals(YearMonth.from(today))).toList();
 	            
-	            Integer joinThisMonth = (int)engineerList.stream().filter(e->{
-	            	if(e.getJoiningDate() != null) {
-	            		if(e.getJoiningDate().getMonth().equals(today.getMonth())) {
-	            			return true;
-	            		}
-	            	}
-					return false;
-	            }).count();
-	            Integer decidedJoinThisMonth = (int)engineerList.stream().filter(e->{
-	            	if(e.getJoiningDate() != null) {
-	            		if(e.getJoiningDate().getMonth().equals(today.getMonth())) {
-	            			if(e.getContract()!= null && e.getContract().getStartDate().getMonth().equals(today.getMonth())) {
-	            				return true;
-	            			}
-	            		}
-	            	}
-	            	return false;
-	            }).count();
-	            Integer joinNextMonth = (int)engineerList.stream().filter(e->{
-	            	if(e.getJoiningDate() != null) {
-	            		if(e.getJoiningDate().getMonth().equals(today.getMonth().plus(1))) {
-	            			return true;
-	            		}
-	            	}
-					return false;
-	            }).count();
-	            Integer shiftDecidedJoinNextMonth = (int)engineerList.stream().filter(e->{
-	            	if(e.getJoiningDate() != null) {
-	            		if(e.getJoiningDate().getMonth().equals(today.getMonth())) {
-	            			if(e.getContract()!= null && e.getContract().getStartDate().getMonth().equals(today.getMonth())) {
-	            				return true;
-	            			}
-	            		}
-	            	}
-					return false;
-	            }).count();
+	            // 이번달에 취업하는 엔지니어 (계약이 있기만 하면 되는 건지 이번달에 계약이 있어야하는건지)??
+	            Integer joinThisMonth = joinThisMonthEngineerList.size();
+	            Integer decidedJoinThisMonth = (int)joinThisMonthEngineerList.stream().filter(e->
+	            		e.hasContractAfter(YearMonth.from(today).atDay(1).minusDays(1))
+	            ).count();
+	            
+	            List<Engineer> joinNextMonthEngineerList = engineerList.stream().filter(e-> e.getJoiningDate() != null && YearMonth.from(e.getJoiningDate()).equals(YearMonth.from(today).plusMonths(1))).toList();
+	            Integer joinNextMonth = joinNextMonthEngineerList.size();
+	            
+	            Integer shiftDecidedJoinNextMonth = (int)joinNextMonthEngineerList.stream().filter(e->
+	            	e.hasContractAfter(YearMonth.from(today).atEndOfMonth())
+	            ).count();
 
 	            Integer deploymentChanges = 0;
 	            Integer weekOverWeekChange = 0;

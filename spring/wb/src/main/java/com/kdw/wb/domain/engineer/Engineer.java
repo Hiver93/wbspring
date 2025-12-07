@@ -58,38 +58,71 @@ public class Engineer {
 		this.type = type;
 		this.companyHouse = companyHouse;
 	}
-
+	
+	public boolean isType(String typeName) {
+		return type.getName().equals(typeName);
+	}
 	
 	// 해당월말에 유지되는 계약이 있는지?
 	public boolean hasContractLastDayOf(YearMonth month) {
-		
-		return this.getContractList().stream().anyMatch(c->{
-			YearMonth startMonth = YearMonth.from(c.getStartDate());
-			YearMonth endMonth = YearMonth.from(c.getEndDate());
-			return (startMonth.equals(month) && !endMonth.equals(month))
-					|| (startMonth.isBefore(month) && endMonth.isAfter(month));
-		});
+		LocalDate endOfMonth = month.atEndOfMonth();
+		return hasContract(endOfMonth);
 	}
 	
 	// 해당일에 유지되는 계약이 있는지?
 	public boolean hasContract(LocalDate date) {
-		return this.getContractList().stream().anyMatch(c->{
-			LocalDate startDate = c.getStartDate().toLocalDate();
-			LocalDate endDate = c.getEndDate().toLocalDate();
-			return (startDate.equals(date))
-					|| (startDate.isBefore(date) && endDate.isAfter(date));
-		});
+		return this.getContractList().stream()
+	            .anyMatch(contract -> contract.isActiveOn(date));
 	}
 	
 	// 해당월말에 회사에 고용된 상태인가
 	public boolean isEmployedLastDayOf(YearMonth month) {
-		return this.getLeavingDate() == null 
-				|| YearMonth.from(this.getLeavingDate()).isAfter(month);
+		LocalDate endOfMonth = month.atEndOfMonth();
+		return	isEmployed(endOfMonth);
 	}
 	
-	// 해당일에 회사에 고용된 상태인가
+	// 해당일에 회사에 고용된 상태인가 (퇴사일 당일은 ???)
 	public boolean isEmployed(LocalDate date) {
-		return this.getLeavingDate() == null
-				|| this.getLeavingDate().toLocalDate().isAfter(date);
+		// 1. 입사일 데이터가 없는 경우 (예외적 상황)
+	    if(this.getJoiningDate() == null) {
+	        if(this.getLeavingDate() == null) {
+	            return true; // 입/퇴사일 모두 없으면 재직 간주
+	        }
+	        // 퇴사일+1일이 기준일보다 미래여야 함 -> 즉, 퇴사일 당일까지 재직
+	        else if(this.getLeavingDate().toLocalDate().plusDays(1).isAfter(date)) {
+	            return true;
+	        }
+	    }
+	    // 2. 입사일 데이터가 있는 경우
+	    // 입사일 당일부터 재직 (입사일 <= date)
+	    else if(this.getJoiningDate().toLocalDate().isBefore(date.plusDays(1))) {
+	        if(this.getLeavingDate() == null) {
+	            return true; // 퇴사일 없으면 계속 재직
+	        }
+	        // 퇴사일 당일까지 재직 (퇴사일 >= date)
+	        else if(this.getLeavingDate().toLocalDate().plusDays(1).isAfter(date)) {
+	            return true;
+	        }
+	    }
+	    
+	    // 그 외는 미재직
+	    return false;
+	}
+	
+	public boolean hasContractAfter(LocalDate date) {
+		return contractList.stream().anyMatch(c->c.getStartDate().toLocalDate().isAfter(date));
+	}
+	
+	public boolean isRetuneeAt(YearMonth month) {
+		return this.contractList.stream().anyMatch(c->c.isOver(month));
+	}
+	
+	private List<Contract> getContractOfTerminatedThisMonth(YearMonth month) {
+		return this.contractList.stream().filter(c->c.isOver(month)).toList();
+	}
+	
+	public boolean hasExtensionIn(YearMonth month) {
+	    return getContractOfTerminatedThisMonth(month).stream()
+	            .anyMatch(c -> c.getExtension()); // 혹은 c.isExtension()
 	}
 }

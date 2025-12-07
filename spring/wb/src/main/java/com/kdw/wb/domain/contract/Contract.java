@@ -1,6 +1,8 @@
 package com.kdw.wb.domain.contract;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -59,5 +61,32 @@ public class Contract {
 		this.company = company;
 		this.startDate = startDate;
 		this.endDate = endDate;
+	}
+	
+	public boolean isActiveOn(LocalDate date) {
+        LocalDate start = this.getStartDate().toLocalDate();
+        LocalDate end = this.getEndDate().toLocalDate();
+
+        // 1. 시작일 이전이면 무조건 false
+        if (date.isBefore(start)) {
+            return false;
+        }
+
+        // 2. 기간 내에 있거나
+        if (!date.isAfter(end)) {
+            return true;
+        }
+
+        // 3. 기간은 지났지만, 같은 달이고 연장이 확정된 경우
+        if (this.getExtension() && 
+            YearMonth.from(end).equals(YearMonth.from(date))) {
+            return true;
+        }
+
+        return false;
+    }
+	
+	public boolean isOver(YearMonth month) {
+		return YearMonth.from(this.endDate).equals(month);
 	}
 }
