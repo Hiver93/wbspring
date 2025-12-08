@@ -1,9 +1,13 @@
 package com.kdw.wb.service.impl;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.kdw.wb.domain.contract.ContractInfo;
+import com.kdw.wb.domain.engineer.Engineer;
 import com.kdw.wb.domain.sales.Sales;
 import com.kdw.wb.domain.sales.SalesStatus;
 import com.kdw.wb.error.ErrorCode;
@@ -59,6 +63,36 @@ public class SalesServiceImpl implements SalesService{
 	@Override
 	public Sales getSales(String name) {
 		return this.salesRepository.findByName(name).orElseThrow(()->{throw new WhiteboardException(ErrorCode.SALES_NOT_FOUND);});
+	}
+
+	@Override
+	public Sales getSalesByNo(Integer no) {
+		return this.salesRepository.findByNo(no).orElseThrow(()->{throw new WhiteboardException(ErrorCode.SALES_NOT_FOUND);});
+	}
+
+	@Override
+	public void ensureSales(List<ContractInfo> contractInfoList) {
+		List<Integer> noList = contractInfoList.stream().map(i->Integer.valueOf(i.getSalesNo())).toList();
+		
+		Set<Integer> noSet = this.salesRepository.findAllByNoIn(noList).stream().map(Sales::getNo).collect(Collectors.toSet());
+		SalesStatus salesStatus = this.salesStatusRepository.findByname("在職中").orElseThrow();
+		List<Sales> salesList =
+		contractInfoList.stream()
+			.filter(i-> !noSet.contains(Integer.valueOf(i.getSalesNo())))
+			.map(info -> Sales.builder()
+					.no(Integer.valueOf(info.getSalesNo()))
+					.name(info.getSalesName())
+					.status(salesStatus)
+					.build())
+			.collect(Collectors.toMap(
+			        Sales::getNo,  
+			        user -> user,          
+			        (oldValue, newValue) -> oldValue 
+			    ))
+			.values().stream()
+			.toList();
+		
+		this.salesRepository.saveAll(salesList);
 	}
 
 	

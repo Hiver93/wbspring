@@ -16,4 +16,4 @@ INSERT INTO engineer_type (name) VALUES
 ('新卒'),
 ('契約社員');
 
-INSERT INTO users (username,password,name) VALUES ('admix','qwer1234!','admin');
+INSERT INTO users (username,password,name) VALUES ('admin','qwer1234!','admin');

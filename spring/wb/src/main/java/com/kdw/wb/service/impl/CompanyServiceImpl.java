@@ -1,10 +1,14 @@
 package com.kdw.wb.service.impl;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.kdw.wb.domain.company.Company;
+import com.kdw.wb.domain.contract.ContractInfo;
+import com.kdw.wb.domain.engineer.Engineer;
 import com.kdw.wb.error.ErrorCode;
 import com.kdw.wb.error.WhiteboardException;
 import com.kdw.wb.repository.CompanyRepository;
@@ -67,6 +71,30 @@ public class CompanyServiceImpl implements CompanyService {
 			System.out.println(companyNo);
 			throw new WhiteboardException(ErrorCode.COMPANY_NOT_FOUND);
 			});
+	}
+
+	@Override
+	public void ensureCompanies(List<ContractInfo> contractInfoList) {
+		List<Integer> noList = contractInfoList.stream().map(i->Integer.valueOf(i.getCompanyNo())).toList();
+		
+		Set<Integer> noSet = this.companyRepository.findAllByNoIn(noList).stream().map(Company::getNo).collect(Collectors.toSet());
+		
+		List<Company> companyList =
+		contractInfoList.stream()
+			.filter(i-> !noSet.contains(Integer.valueOf(i.getCompanyNo())))
+			.map(info -> Company.builder()
+					.no(Integer.valueOf(info.getCompanyNo()))
+					.name(info.getCompanyName())
+					.build())
+			.collect(Collectors.toMap(
+			        Company::getNo,  
+			        user -> user,          
+			        (oldValue, newValue) -> oldValue 
+			    ))
+			.values().stream()
+			.toList();
+		
+		this.companyRepository.saveAll(companyList);
 	}
 
 }

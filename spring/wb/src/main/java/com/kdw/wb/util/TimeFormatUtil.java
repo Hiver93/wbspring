@@ -14,7 +14,7 @@ public class TimeFormatUtil {
 	 * @param str(yyyy/M/d)
 	 * @return startOfDay
 	 */
-	public LocalDateTime convert(String dateStr) {
+	public static LocalDateTime convert(String dateStr) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/M/d");
         
         LocalDate localDate1 = LocalDate.parse(dateStr, formatter);

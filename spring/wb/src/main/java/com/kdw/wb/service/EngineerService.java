@@ -3,6 +3,7 @@ package com.kdw.wb.service;
 import java.util.List;
 
 import com.kdw.wb.domain.company.Company;
+import com.kdw.wb.domain.contract.ContractInfo;
 import com.kdw.wb.domain.engineer.Engineer;
 import com.kdw.wb.domain.engineer.EngineerType;
 import com.kdw.wb.domain.sales.Sales;
@@ -18,4 +19,5 @@ public interface EngineerService {
 	public void removeEngineer(Integer engineerId);
 	public EngineerType getEngineerType(String typeName);
 	public Engineer getEngineerByNo(Integer engineerNo);
+	public void ensureEngineers(List<ContractInfo> engineerList);
 }

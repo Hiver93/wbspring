@@ -2,6 +2,7 @@ package com.kdw.wb.service;
 
 import java.util.List;
 
+import com.kdw.wb.domain.contract.ContractInfo;
 import com.kdw.wb.domain.sales.Sales;
 import com.kdw.wb.domain.sales.SalesStatus;
 
@@ -14,4 +15,6 @@ public interface SalesService {
 	public void modifySales(Integer salesId, String name);
 	public SalesStatus getSalesStatus(String statusName);
 	public Sales getSales(String name);
+	public Sales getSalesByNo(Integer no);
+	public void ensureSales(List<ContractInfo> contractInfoList);
 }

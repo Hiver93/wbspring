@@ -3,12 +3,12 @@ package com.kdw.wb.facade;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kdw.wb.domain.contract.ContractInfo;
-import com.kdw.wb.domain.engineer.Engineer;
 import com.kdw.wb.domain.engineer.EngineerType;
 import com.kdw.wb.domain.sales.SalesStatus;
 import com.kdw.wb.dto.legacy.ResDto;
@@ -66,66 +66,28 @@ public class WhiteboardFacade {
 		Map<String, ContractInfo> engineerInfoMap = new HashMap<>();
 		Map<String, ContractInfo> companyInfoMap = new HashMap<>();
 		
-		SalesStatus salesStatus = this.salesService.getSalesStatus("在職中");
-		Map<String, EngineerType> engineerTypeMap = Map.of(
-				"正社員", this.engineerService.getEngineerType("正社員"),
-				"GE", this.engineerService.getEngineerType("GE"),
-				"契約社員", this.engineerService.getEngineerType("契約社員"),
-				"新卒", this.engineerService.getEngineerType("新卒")
-				);
-		
 		contractInfoList.stream().forEach(i->{
 			if(!salesInfoMap.containsKey(i.getSalesNo())) {
 				salesInfoMap.put(i.getSalesNo(), i);
 			}
-			if(!engineerInfoMap.containsKey(i.getEngineerNo())) {
+			if(!i.getCompanyNo().equals("3729") && !i.getCompanyNo().equals("3906") && !engineerInfoMap.containsKey(i.getEngineerNo())) {
 				engineerInfoMap.put(i.getEngineerNo(),i);
 			}
 			if(!companyInfoMap.containsKey(i.getCompanyNo())) {
 				companyInfoMap.put(i.getCompanyNo(), i);
 			}
 		});
-//		406
-//		3729
-//		3906
-//		3729
-		System.out.println(salesInfoMap.size());
-		System.out.println(engineerInfoMap.size());
-		System.out.println(companyInfoMap.size());
+		
+//		406, 3729, 3906
 
-		engineerInfoMap.entrySet().stream().forEach(en->{
-			ContractInfo info = en.getValue();
-			if(info.getCompanyNo().equals("3729") || info.getCompanyNo().equals("3906")) {
-				
-			}
-			else {
-				this.engineerService.createEngineer(Integer.valueOf(info.getEngineerNo()), info.getEngineerName(), engineerTypeMap.get(info.getType()), info.getCompanyHouse().equals("有"));
-			}
-		});
-		salesInfoMap.entrySet().stream().forEach(en->{
-			ContractInfo info = en.getValue();
-			this.salesService.createSales(Integer.valueOf(info.getSalesNo()), info.getSalesName(), salesStatus);
-		});
-		companyInfoMap.entrySet().stream().forEach(en->{
-			ContractInfo info = en.getValue();
-			this.companyService.createCompany(Integer.valueOf(info.getCompanyNo()), info.getCompanyName());
-		});
-
+		this.engineerService.ensureEngineers(engineerInfoMap.entrySet().stream().map(Entry::getValue).toList());
+		this.salesService.ensureSales(salesInfoMap.entrySet().stream().map(Entry::getValue).toList());
+		this.companyService.ensureCompanies(companyInfoMap.entrySet().stream().map(Entry::getValue).toList());	
+		this.contractService.ensureContracts(
+				contractInfoList.stream().filter(info->!info.getCompanyNo().equals("3729") && !info.getCompanyNo().equals("3906") && !info.getCompanyNo().equals("406"))
+				.toList()
+				);
 		
 		
-		contractInfoList.stream()
-		.forEach((info)->{
-			if(info.getCompanyNo().equals("3729") || info.getCompanyNo().equals("3906")||info.getCompanyNo().equals("406")){
-				
-			}
-			else
-			this.contractService.createContract(
-					this.engineerService.getEngineerByNo(Integer.valueOf(info.getEngineerNo())),
-					salesService.getSales(info.getSalesName()),
-					companyService.getCompanyByNo(Integer.valueOf(info.getCompanyNo())),
-					timeFormatUtil.convert(info.getStartDate()),
-					timeFormatUtil.convert(info.getEndDate()),
-					info.getTakeover().equals("1")? false : true);
-		});
 	}
 }

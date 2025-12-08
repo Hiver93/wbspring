@@ -19,7 +19,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,12 +36,12 @@ public class Contract {
 	private Sales sales;
 	@ManyToOne
 	private Sales selfContracting;
-	@OneToOne
+	@ManyToOne
 	private Engineer engineer;
 	@ManyToOne
 	private Company company;
 	@Column
-	private Boolean extension;
+	private Boolean extension = true;
 	@Column
 	private LocalDateTime startDate;
 	@Column
@@ -71,15 +70,13 @@ public class Contract {
         if (date.isBefore(start)) {
             return false;
         }
-
         // 2. 기간 내에 있거나
         if (!date.isAfter(end)) {
             return true;
         }
-
         // 3. 기간은 지났지만, 같은 달이고 연장이 확정된 경우
-        if (this.getExtension() && 
-            YearMonth.from(end).equals(YearMonth.from(date))) {
+        if (this.getExtension() 
+        	&& YearMonth.from(end).equals(YearMonth.from(date))) {
             return true;
         }
 

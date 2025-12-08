@@ -32,12 +32,6 @@ public class FileServiceImpl implements FileService{
 		try(InputStreamReader reader = new InputStreamReader(file.getInputStream(),"MS932")){
 			CSVReader csvReader = new CSVReader(reader);
 		    String[] headers = csvReader.readNext(); // 첫 번째 행(헤더)을 읽습니다.	
-		    if (headers != null) {
-		        System.out.println("--- CSV 파일에서 읽은 실제 헤더 ---");
-		        for (String header : headers) {
-		            System.out.println("['" + header.trim() + "']"); // .trim()으로 공백 제거 후 출력
-		        }
-		    }
 		    csvReader.forEach(line -> {
 		    	String[] strs = line;
 		    	list.add(ContractInfo.builder()
@@ -54,7 +48,6 @@ public class FileServiceImpl implements FileService{
 		    			.takeover(strs[10])
 		    			.build());
 		    });
-		  list.stream().forEach(System.out::println);
 			
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
