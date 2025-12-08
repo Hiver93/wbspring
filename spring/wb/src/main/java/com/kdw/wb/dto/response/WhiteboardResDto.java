@@ -173,10 +173,12 @@ public class WhiteboardResDto {
 				
 				private record EngineerItem(
 						Integer engineerid,
-						String engineerName
+						String name,
+						String type,
+						String status
 						) {
 					private static EngineerItem from(Engineer engineer) {
-						return new EngineerItem(engineer.getId(), engineer.getName());
+						return new EngineerItem(engineer.getId(), engineer.getName(), engineer.getType().getName(), "勤務中");
 					}
 				}
 			}
