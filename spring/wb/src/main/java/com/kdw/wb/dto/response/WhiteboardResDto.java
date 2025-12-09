@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 
 import com.kdw.wb.domain.company.Company;
 import com.kdw.wb.domain.contract.Contract;
@@ -187,12 +188,15 @@ public class WhiteboardResDto {
 					int cnt
 					) {
 				private static CompanyItem from(Company company, Sales sales) {
+	            	Map<String,Integer> compareMap = Map.of("新卒",1,"正社員",2,"GE",3,"契約社員",4);
 					List<EngineerItem> engineerItemList = company.getContractList().stream()
 				            .filter(c -> c.getSales().getId().equals(sales.getId()))
 				            .map(Contract::getEngineer)
 				            .distinct()
 				            .map(EngineerItem::from)
-				            .sorted((e1, e2) -> e1.type.compareTo(e2.type)) 
+				            .sorted((e1, e2) -> {
+				            	return Integer.compare(compareMap.get(e1.type), compareMap.get(e2.type));
+				            }) 
 				            .toList();
 					;
 				    return new CompanyItem(company.getId(), company.getName(), engineerItemList, engineerItemList.size());
