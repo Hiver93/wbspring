@@ -9,6 +9,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.kdw.wb.common.BaseResBody;
@@ -64,6 +65,13 @@ public class GlobalExceptionHandler {
 		return new BaseResBody<>(new BaseErrorData("check url"), 
 				"システムエラーが発生しました。管理者にお問い合わせください")
 				.toResponse(HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(MultipartException.class)
+	public ResponseEntity<BaseResBody<BaseErrorData>> handleException(MultipartException ex){
+		return new BaseResBody<>(new BaseErrorData(ex.getMessage()), 
+				"システムエラーが発生しました。管理者にお問い合わせください")
+				.toResponse(HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler(Exception.class)
