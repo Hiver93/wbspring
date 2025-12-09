@@ -125,4 +125,8 @@ public class Engineer {
 	    return getContractOfTerminatedThisMonth(month).stream()
 	            .anyMatch(c -> c.getExtension()); // 혹은 c.isExtension()
 	}
+	
+	public void setLeavingDate(LocalDateTime leavingDate) {
+		this.leavingDate = leavingDate;
+	}
 }

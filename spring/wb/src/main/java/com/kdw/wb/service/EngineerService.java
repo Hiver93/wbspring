@@ -1,6 +1,8 @@
 package com.kdw.wb.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import com.kdw.wb.domain.company.Company;
 import com.kdw.wb.domain.contract.ContractInfo;
@@ -20,4 +22,5 @@ public interface EngineerService {
 	public EngineerType getEngineerType(String typeName);
 	public Engineer getEngineerByNo(Integer engineerNo);
 	public void ensureEngineers(List<ContractInfo> engineerList);
+	public void updateReturnees(Map<Integer, String> returneesMap, LocalDateTime localDateTime);
 }

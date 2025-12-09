@@ -4,7 +4,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,7 +35,7 @@ public class FileServiceImpl implements FileService{
 		List<ContractInfo> list = new ArrayList<ContractInfo>();
 		try(InputStreamReader reader = new InputStreamReader(file.getInputStream(),"MS932")){
 			CSVReader csvReader = new CSVReader(reader);
-		    String[] headers = csvReader.readNext(); // 첫 번째 행(헤더)을 읽습니다.	
+		    String[] headers = csvReader.readNext(); 
 		    csvReader.forEach(line -> {
 		    	String[] strs = line;
 		    	list.add(ContractInfo.builder()
@@ -54,10 +58,50 @@ public class FileServiceImpl implements FileService{
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		} catch (CsvValidationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		return list;
 	}
 
+	@Override
+	public Map<String, List<String>> convertFromCsvToMap(MultipartFile file) {
+		if(file.isEmpty()) {
+			throw new WhiteboardException(ErrorCode.FILE_REQUIRED);
+		}
+		
+		if(!"text/csv".equals(file.getContentType())) {
+			throw new WhiteboardException(ErrorCode.INVALID_CONTENT_TYPE);
+		}
+		List<ContractInfo> list = new ArrayList<ContractInfo>();
+		Map<String,List<String>> map = new HashMap<>();
+		List<String> headerNames = new ArrayList<>();
+		try(InputStreamReader reader = new InputStreamReader(file.getInputStream(),"MS932");
+			CSVReader csvReader = new CSVReader(reader);	
+		){
+			
+		    String[] headers = csvReader.readNext(); 
+		    Stream.of(headers).forEach(str->{
+		    	map.put(str, new ArrayList<>());
+		    	headerNames.add(str);
+		    });
+		    
+		    csvReader.forEach(line -> {
+		    	String[] strs = line;
+		    	for(int i = 0; i < strs.length; ++i) {
+		    		map.get(headerNames.get(i)).add(strs[i]);
+		    	}
+		    });
+			
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} catch (CsvValidationException e) {
+			throw new RuntimeException(e);
+		}	
+		
+		return map;
+	}
+	
+	
 }

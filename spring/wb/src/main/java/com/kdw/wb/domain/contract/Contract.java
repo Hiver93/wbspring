@@ -86,4 +86,8 @@ public class Contract {
 	public boolean isOver(YearMonth month) {
 		return YearMonth.from(this.endDate).equals(month);
 	}
+	
+	public void terminateAfterEndDate() {
+		this.extension = false;
+	}
 }

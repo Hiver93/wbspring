@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kdw.wb.common.BaseResBody;
 
 @RestController
-@RequestMapping("/contract")
+@RequestMapping("/contracts")
 public class ContractController {
 
 	@PutMapping("/bulk")

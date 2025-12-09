@@ -1,5 +1,7 @@
 package com.kdw.wb.service.impl;
 
+import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -18,6 +20,7 @@ import com.kdw.wb.repository.EngineerRepository;
 import com.kdw.wb.repository.EngineerTypeRepository;
 import com.kdw.wb.service.EngineerService;
 
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -109,6 +112,30 @@ public class EngineerServiceImple implements EngineerService{
 			.toList();
 		
 		this.engineerRepository.saveAll(engineerList);
+	}
+
+	@Override
+	@Transactional
+	public void updateReturnees(Map<Integer, String> returneesMap, LocalDateTime localDateTime) {
+		returneesMap.entrySet().stream().forEach(entry->{
+			Integer no = entry.getKey();
+			String status = entry.getValue();
+			
+			Engineer saved = this.engineerRepository.findByNo(no).orElseThrow(()->{throw new WhiteboardException(ErrorCode.ENGINEER_NOT_FOUND);});
+			saved.getContractList().stream().filter(c->c.isOver(YearMonth.from(localDateTime)))
+			.forEach(c ->{
+					switch(status) {
+					case "確定":
+						c.terminateAfterEndDate();
+						break;
+					case "退職":
+						c.terminateAfterEndDate();
+						c.getEngineer().setLeavingDate(localDateTime);
+						break;
+					}
+			});
+		
+		});
 	}
 
 }
