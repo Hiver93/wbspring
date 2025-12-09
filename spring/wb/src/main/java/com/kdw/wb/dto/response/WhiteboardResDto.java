@@ -18,7 +18,20 @@ public class WhiteboardResDto {
 			) {
 		
 		public static Overview from(List<Engineer> engineerList, List<Sales> salesList) {
-			return new Overview(Summary.from(engineerList),salesList.stream().map(SalesItem::from).toList());
+			List<SalesItem> salesItemList = salesList.stream()
+		            .map(SalesItem::from)
+		            .sorted((s1, s2) -> {
+		                int count1 = s1.companyList().stream()
+		                        .mapToInt(c -> c.engineerList().size())
+		                        .sum();
+		                int count2 = s2.companyList().stream()
+		                        .mapToInt(c -> c.engineerList().size())
+		                        .sum();
+		                return Integer.compare(count2, count1); // 내림차순 정렬
+		            })
+		            .toList();
+
+		    return new Overview(Summary.from(engineerList), salesItemList);
 		}
 		private record Summary(
 				String date,
@@ -167,8 +180,14 @@ public class WhiteboardResDto {
 					List<EngineerItem> engineerList
 					) {
 				private static CompanyItem from(Company company, Sales sales) {
-					return new CompanyItem(company.getId(), company.getName(),
-							company.getContractList().stream().filter(c->c.getSales().getId().equals(sales.getId())).map(Contract::getEngineer).map(EngineerItem::from).toList());
+					List<EngineerItem> engineerItemList = company.getContractList().stream()
+				            .filter(c -> c.getSales().getId().equals(sales.getId()))
+				            .map(Contract::getEngineer)
+				            .map(EngineerItem::from)
+				            .sorted((e1, e2) -> e1.type.compareTo(e2.type)) 
+				            .toList();
+
+				    return new CompanyItem(company.getId(), company.getName(), engineerItemList);
 				}
 				
 				private record EngineerItem(
