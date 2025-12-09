@@ -165,29 +165,37 @@ public class WhiteboardResDto {
 		private record SalesItem(
 				Integer salesId,
 				String salesName,
-				List<CompanyItem> companyList
+				List<CompanyItem> companyList,
+				int cnt
 				) {
 			
 			private static SalesItem from(Sales sales) {
-				return new SalesItem(sales.getId(), sales.getName(), sales.getContractList().stream().map(c->{
-					return CompanyItem.from(c.getCompany(), sales);
-				}).toList());
+				
+				List<CompanyItem> companyList = sales.getContractList().stream()
+			            .map(Contract::getCompany)            // 1. 먼저 Company 객체만 추출
+			            .distinct()                           // 2. Company 중복 제거
+			            .map(c -> CompanyItem.from(c, sales)) // 3. CompanyItem으로 변환
+			            .toList();
+				
+				return new SalesItem(sales.getId(), sales.getName(), companyList, companyList.size() );
 			}
 			
 			private record CompanyItem(
 					Integer companyid,
 					String companyName,
-					List<EngineerItem> engineerList
+					List<EngineerItem> engineerList,
+					int cnt
 					) {
 				private static CompanyItem from(Company company, Sales sales) {
 					List<EngineerItem> engineerItemList = company.getContractList().stream()
 				            .filter(c -> c.getSales().getId().equals(sales.getId()))
 				            .map(Contract::getEngineer)
+				            .distinct()
 				            .map(EngineerItem::from)
 				            .sorted((e1, e2) -> e1.type.compareTo(e2.type)) 
 				            .toList();
-
-				    return new CompanyItem(company.getId(), company.getName(), engineerItemList);
+					;
+				    return new CompanyItem(company.getId(), company.getName(), engineerItemList, engineerItemList.size());
 				}
 				
 				private record EngineerItem(
