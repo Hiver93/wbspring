@@ -14,8 +14,8 @@ public class CompanyReqDto {
 	@NoArgsConstructor
 	public static class Post{
 		
-		@NotBlank(message = "companyNo is required")
-		private Integer companyNo;
+		@NotBlank(message = "companyId is required")
+		private Integer companyId;
 		@NotBlank(message = "companyName is required")
 		private String companyName;
 	}

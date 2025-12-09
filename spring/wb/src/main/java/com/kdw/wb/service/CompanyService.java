@@ -12,6 +12,5 @@ public interface CompanyService {
 	public void modifyCompany(Integer companyId, String name);
 	public void removeCompany(Integer companyid);
 	public Company getCompany(String name);
-	public Company getCompanyByNo(Integer companyNo);
 	public void ensureCompanies(List<ContractInfo> contractInfoList);
 }

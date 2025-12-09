@@ -28,8 +28,6 @@ public class CompanyGroup {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	@Column(unique = true)
-	private Integer no;
 	@Column
 	private String name;
 	@OneToMany(mappedBy = "companyGroup", fetch = FetchType.LAZY)

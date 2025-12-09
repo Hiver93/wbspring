@@ -30,10 +30,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Engineer {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	@Column(unique=true)
-	private Integer no;
 	@Column
 	private String name;
 	@Column
@@ -51,9 +48,9 @@ public class Engineer {
 	@LastModifiedDate
 	private LocalDateTime updatedAt;
 	@Builder
-	public Engineer(Integer no, String name, EngineerType type, Boolean companyHouse) {
+	public Engineer(Integer id, String name, EngineerType type, Boolean companyHouse) {
 		super();
-		this.no = no;
+		this.id = id;
 		this.name = name;
 		this.type = type;
 		this.companyHouse = companyHouse;

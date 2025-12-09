@@ -15,5 +15,5 @@ public interface SalesRepository extends JpaRepository<Sales, Integer> {
 	public Optional<Sales> findByName(String name);
 	public Optional<Sales> findByNo(Integer no);
 	public boolean existsByNo(Integer no);
-	public Set<Sales> findAllByNoIn(List<Integer> noList);
+	public Set<Sales> findAllByIdIn(List<Integer> idList);
 }

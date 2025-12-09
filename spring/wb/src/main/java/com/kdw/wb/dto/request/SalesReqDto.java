@@ -14,8 +14,8 @@ public class SalesReqDto {
 	@NoArgsConstructor
 	public static class Post{
 		
-		@NotBlank(message = "no is required")
-		private Integer no;
+		@NotBlank(message = "salesId is required")
+		private Integer salesId;
 		@NotBlank(message = "name is required")
 		private String name;
 	}

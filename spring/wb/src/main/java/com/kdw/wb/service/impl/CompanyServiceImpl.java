@@ -23,15 +23,14 @@ public class CompanyServiceImpl implements CompanyService {
 	private final CompanyRepository companyRepository;
 	
 	@Override
-	public void createCompany(Integer no, String name) {
-		Company company = Company.builder().no(no).name(name).build();
+	public void createCompany(Integer id, String name) {
+		Company company = Company.builder().id(id).name(name).build();
 		this.companyRepository.save(company);
 	}
 
 	@Override
 	public Company getCompany(Integer companyId) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.companyRepository.findById(companyId).orElseThrow(()->{throw new WhiteboardException(ErrorCode.COMPANY_NOT_FOUND, "id : "+ companyId.toString());});
 	}
 
 	@Override
@@ -66,28 +65,20 @@ public class CompanyServiceImpl implements CompanyService {
 	}
 
 	@Override
-	public Company getCompanyByNo(Integer companyNo) {
-		return this.companyRepository.findByNo(companyNo).orElseThrow(()->{
-			System.out.println(companyNo);
-			throw new WhiteboardException(ErrorCode.COMPANY_NOT_FOUND);
-			});
-	}
-
-	@Override
 	public void ensureCompanies(List<ContractInfo> contractInfoList) {
-		List<Integer> noList = contractInfoList.stream().map(i->Integer.valueOf(i.getCompanyNo())).toList();
+		List<Integer> idList = contractInfoList.stream().map(i->Integer.valueOf(i.getCompanyId())).toList();
 		
-		Set<Integer> noSet = this.companyRepository.findAllByNoIn(noList).stream().map(Company::getNo).collect(Collectors.toSet());
+		Set<Integer> idSet = this.companyRepository.findAllByIdIn(idList).stream().map(Company::getId).collect(Collectors.toSet());
 		
 		List<Company> companyList =
 		contractInfoList.stream()
-			.filter(i-> !noSet.contains(Integer.valueOf(i.getCompanyNo())))
+			.filter(i-> !idSet.contains(Integer.valueOf(i.getCompanyId())))
 			.map(info -> Company.builder()
-					.no(Integer.valueOf(info.getCompanyNo()))
+					.id(Integer.valueOf(info.getCompanyId()))
 					.name(info.getCompanyName())
 					.build())
 			.collect(Collectors.toMap(
-			        Company::getNo,  
+			        Company::getId,  
 			        user -> user,          
 			        (oldValue, newValue) -> oldValue 
 			    ))

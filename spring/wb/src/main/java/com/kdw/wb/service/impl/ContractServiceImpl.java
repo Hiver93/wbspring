@@ -1,7 +1,6 @@
 package com.kdw.wb.service.impl;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -43,9 +42,9 @@ public class ContractServiceImpl implements ContractService {
 		List<Contract> savedContractList = this.contractRepository.findAll();
 		Set<String> savedContractKeys = savedContractList.stream()
 				.map(c -> new StringBuilder()
-						.append(c.getCompany().getNo()).append('/')
-						.append(c.getEngineer().getNo()).append('/')
-						.append(c.getSales().getNo()).append('/')
+						.append(c.getCompany().getId()).append('/')
+						.append(c.getEngineer().getId()).append('/')
+						.append(c.getSales().getId()).append('/')
 						.append(c.getStartDate().toString()).append('/')
 						.append(c.getEndDate().toString())
 						.toString())
@@ -53,18 +52,18 @@ public class ContractServiceImpl implements ContractService {
 		
 		List<Contract> contractList = contractInfoList.stream().filter(c->!savedContractKeys.contains(
 				new StringBuilder()
-				.append(c.getCompanyNo()).append('/')
-				.append(c.getEngineerNo()).append('/')
-				.append(c.getSalesNo()).append('/')
+				.append(c.getCompanyId()).append('/')
+				.append(c.getEngineerId()).append('/')
+				.append(c.getSalesId()).append('/')
 				.append(TimeFormatUtil.convert(c.getStartDate()).toString()).append('/')
 				.append(TimeFormatUtil.convert(c.getEndDate()).toString())
 				.toString()
 				))
 		.map(c->{
-			Sales sales = this.salesService.getSalesByNo(Integer.valueOf(c.getSalesNo()));
+			Sales sales = this.salesService.getSales(Integer.valueOf(c.getSalesId()));
 			return Contract.builder()
-				.company(this.companyService.getCompanyByNo(Integer.valueOf(c.getCompanyNo())))
-				.engineer(this.engineerService.getEngineerByNo(Integer.valueOf(c.getEngineerNo())))
+				.company(this.companyService.getCompany(Integer.valueOf(c.getCompanyId())))
+				.engineer(this.engineerService.getEngineer(Integer.valueOf(c.getEngineerId())))
 				.sales(sales)
 				.startDate(TimeFormatUtil.convert(c.getStartDate()))
 				.endDate(TimeFormatUtil.convert(c.getEndDate()))

@@ -31,8 +31,6 @@ public class Company {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	@Column(unique=true)
-	private Integer no;
 	@Column
 	private String name;
 	@ManyToOne
@@ -45,9 +43,8 @@ public class Company {
 	private LocalDateTime updatedAt;
 	
 	@Builder
-	public Company(Integer no, String name) {
+	public Company(Integer id, String name) {
 		super();
-		this.no = no;
 		this.name = name;
 	}
 	

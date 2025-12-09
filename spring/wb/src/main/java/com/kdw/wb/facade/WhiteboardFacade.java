@@ -67,14 +67,14 @@ public class WhiteboardFacade {
 		Map<String, ContractInfo> companyInfoMap = new HashMap<>();
 		
 		contractInfoList.stream().forEach(i->{
-			if(!salesInfoMap.containsKey(i.getSalesNo())) {
-				salesInfoMap.put(i.getSalesNo(), i);
+			if(!salesInfoMap.containsKey(i.getSalesId())) {
+				salesInfoMap.put(i.getSalesId(), i);
 			}
-			if(!i.getCompanyNo().equals("3729") && !i.getCompanyNo().equals("3906") && !engineerInfoMap.containsKey(i.getEngineerNo())) {
-				engineerInfoMap.put(i.getEngineerNo(),i);
+			if(!i.getCompanyId().equals("3729") && !i.getCompanyId().equals("3906") && !engineerInfoMap.containsKey(i.getEngineerId())) {
+				engineerInfoMap.put(i.getEngineerId(),i);
 			}
-			if(!companyInfoMap.containsKey(i.getCompanyNo())) {
-				companyInfoMap.put(i.getCompanyNo(), i);
+			if(!companyInfoMap.containsKey(i.getCompanyId())) {
+				companyInfoMap.put(i.getCompanyId(), i);
 			}
 		});
 		
@@ -84,7 +84,7 @@ public class WhiteboardFacade {
 		this.salesService.ensureSales(salesInfoMap.entrySet().stream().map(Entry::getValue).toList());
 		this.companyService.ensureCompanies(companyInfoMap.entrySet().stream().map(Entry::getValue).toList());	
 		this.contractService.ensureContracts(
-				contractInfoList.stream().filter(info->!info.getCompanyNo().equals("3729") && !info.getCompanyNo().equals("3906") && !info.getCompanyNo().equals("406"))
+				contractInfoList.stream().filter(info->!info.getCompanyId().equals("3729") && !info.getCompanyId().equals("3906") && !info.getCompanyId().equals("406"))
 				.toList()
 				);
 		

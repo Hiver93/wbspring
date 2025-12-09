@@ -15,13 +15,13 @@ import lombok.Setter;
 @Builder
 public class ContractInfo {
 
-	private String companyNo;
+	private String companyId;
 	@CsvBindByName(column = "得意先名")
 	private String companyName;
-	private String engineerNo;
+	private String engineerId;
 	@CsvBindByName(column = "ｴﾝｼﾞﾆｱ名")
 	private String engineerName;
-	private String salesNo;
+	private String salesId;
 	@CsvBindByName(column = "営業担当者名")
 	private String salesName;
 	@CsvBindByName(column = "開始請求期間")
@@ -31,13 +31,6 @@ public class ContractInfo {
 	private String type;
 	private String companyHouse;
 	private String takeover;
-	@Override
-	public String toString() {
-		return "ContractInfo [companyNo=" + companyNo + ", companyName=" + companyName + ", engineerNo=" + engineerNo
-				+ ", engineerName=" + engineerName + ", salesNo=" + salesNo + ", salesName=" + salesName
-				+ ", startDate=" + startDate + ", endDate=" + endDate + ", type=" + type + ", companyHouse="
-				+ companyHouse + ", takeover=" + takeover + "]";
-	}
 	
 	
 }

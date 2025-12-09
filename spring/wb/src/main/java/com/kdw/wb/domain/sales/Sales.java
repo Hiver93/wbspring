@@ -14,8 +14,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -30,10 +28,7 @@ import lombok.NoArgsConstructor;
 public class Sales {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	@Column(unique=true)
-	private Integer no;
 	@Column
 	private String name;
 	@OneToMany(mappedBy = "sales", fetch = FetchType.LAZY)
@@ -47,9 +42,9 @@ public class Sales {
 	@LastModifiedDate
 	private LocalDateTime updatedAt;
 	@Builder
-	public Sales(Integer no, String name, SalesStatus status) {
+	public Sales(Integer id, String name, SalesStatus status) {
 		super();
-		this.no = no;
+		this.id = id;
 		this.name = name;
 		this.status = status;
 	}

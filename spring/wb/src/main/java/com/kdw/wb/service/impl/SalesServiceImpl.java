@@ -26,8 +26,8 @@ public class SalesServiceImpl implements SalesService{
 	private final SalesStatusRepository salesStatusRepository;
 
 	@Override
-	public Sales createSales(Integer no, String name, SalesStatus status) {
-		Sales sales = Sales.builder().no(no).name(name).status(status).build();
+	public Sales createSales(Integer id, String name, SalesStatus status) {
+		Sales sales = Sales.builder().id(id).name(name).status(status).build();
 		return this.salesRepository.save(sales);
 	}
 
@@ -64,28 +64,22 @@ public class SalesServiceImpl implements SalesService{
 	public Sales getSales(String name) {
 		return this.salesRepository.findByName(name).orElseThrow(()->{throw new WhiteboardException(ErrorCode.SALES_NOT_FOUND);});
 	}
-
-	@Override
-	public Sales getSalesByNo(Integer no) {
-		return this.salesRepository.findByNo(no).orElseThrow(()->{throw new WhiteboardException(ErrorCode.SALES_NOT_FOUND);});
-	}
-
 	@Override
 	public void ensureSales(List<ContractInfo> contractInfoList) {
-		List<Integer> noList = contractInfoList.stream().map(i->Integer.valueOf(i.getSalesNo())).toList();
+		List<Integer> idList = contractInfoList.stream().map(i->Integer.valueOf(i.getSalesId())).toList();
 		
-		Set<Integer> noSet = this.salesRepository.findAllByNoIn(noList).stream().map(Sales::getNo).collect(Collectors.toSet());
+		Set<Integer> idSet = this.salesRepository.findAllByIdIn(idList).stream().map(Sales::getId).collect(Collectors.toSet());
 		SalesStatus salesStatus = this.salesStatusRepository.findByname("在職中").orElseThrow();
 		List<Sales> salesList =
 		contractInfoList.stream()
-			.filter(i-> !noSet.contains(Integer.valueOf(i.getSalesNo())))
+			.filter(i-> !idSet.contains(Integer.valueOf(i.getSalesId())))
 			.map(info -> Sales.builder()
-					.no(Integer.valueOf(info.getSalesNo()))
+					.id(Integer.valueOf(info.getSalesId()))
 					.name(info.getSalesName())
 					.status(salesStatus)
 					.build())
 			.collect(Collectors.toMap(
-			        Sales::getNo,  
+			        Sales::getId,  
 			        user -> user,          
 			        (oldValue, newValue) -> oldValue 
 			    ))

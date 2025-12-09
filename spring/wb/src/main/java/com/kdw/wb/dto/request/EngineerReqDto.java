@@ -15,8 +15,8 @@ public class EngineerReqDto {
 	@NoArgsConstructor
 	public static class Post{
 		
-		@NotNull(message = "engineerNo is required")
-		private Integer engineerNo;
+		@NotNull(message = "engineerId is required")
+		private Integer engineerId;
 		@NotBlank(message = "name is required")
 		private String name;
 		@NotBlank(message = "engineerType is required")
@@ -31,8 +31,6 @@ public class EngineerReqDto {
 	@NoArgsConstructor
 	public static class Put{
 		
-		@NotNull(message = "engineerNo is required")
-		private Integer engineerNo;
 		@NotBlank(message = "name is required")
 		private String engineerName;
 		@NotBlank(message = "engineerType is required")
