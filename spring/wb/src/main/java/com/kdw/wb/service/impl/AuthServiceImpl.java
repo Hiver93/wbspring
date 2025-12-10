@@ -23,7 +23,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @Service
 public class AuthServiceImpl implements AuthService {
 
-	private final String cookiePath = "/";
+	private final String COOKIE_PATH = "/";
 	private final long ACCESS_EXP;
 	private final long REFRESH_EXP;
 	private final JwtUtil jwtUtil;
@@ -51,7 +51,7 @@ public class AuthServiceImpl implements AuthService {
 		HttpServletResponse response = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getResponse();
 		
 		Cookie cookie = new Cookie("refresh", refresh);
-		cookie.setPath("/");
+		cookie.setPath(COOKIE_PATH);
 		cookie.setHttpOnly(this.httpOnly);
 		cookie.setSecure(this.secure);
 		
@@ -89,7 +89,7 @@ public class AuthServiceImpl implements AuthService {
 				.findAny().orElseGet(null);
 		if(cookie != null) {
 			cookie.setMaxAge(0);
-			cookie.setPath("/"); 
+			cookie.setPath(COOKIE_PATH); 
 			response.addCookie(cookie);
 		}
 	}

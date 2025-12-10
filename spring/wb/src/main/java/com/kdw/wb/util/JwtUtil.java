@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.kdw.wb.domain.auth.Auth;
-import com.kdw.wb.domain.user.User;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -19,16 +18,10 @@ public class JwtUtil {
 
 	private final String SECRET_STR;
 	private final SecretKey SECRET_KEY;
-	private final long ACCESS_EXP;
-	private final long REFRESH_EXP;
 	
 	public JwtUtil(
-			 @Value("${jwt.properties.secretkey}") String secretKey,
-			 @Value("${jwt.properties.access-token-expiration-time-in-milliseconds}")long accessExp,
-			 @Value("${jwt.properties.access-token-expiration-time-in-milliseconds}")long refreshExp) {
+			 @Value("${jwt.properties.secretkey}") String secretKey) {
 		SECRET_STR = secretKey;
-		ACCESS_EXP = accessExp;
-		REFRESH_EXP = refreshExp;
 		SECRET_KEY = Keys.hmacShaKeyFor(SECRET_STR.getBytes());
 	}
 	

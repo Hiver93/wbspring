@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,8 +32,8 @@ public class FileServiceImpl implements FileService{
 			throw new WhiteboardException(ErrorCode.INVALID_CONTENT_TYPE);
 		}
 		List<ContractInfo> list = new ArrayList<ContractInfo>();
-		try(InputStreamReader reader = new InputStreamReader(file.getInputStream(),"MS932")){
-			CSVReader csvReader = new CSVReader(reader);
+		try(InputStreamReader reader = new InputStreamReader(file.getInputStream(),"MS932");
+			CSVReader csvReader = new CSVReader(reader);){
 		    String[] headers = csvReader.readNext(); 
 		    csvReader.forEach(line -> {
 		    	String[] strs = line;

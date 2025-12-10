@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.kdw.wb.domain.contract.ContractInfo;
-import com.kdw.wb.domain.engineer.Engineer;
 import com.kdw.wb.domain.sales.Sales;
 import com.kdw.wb.domain.sales.SalesStatus;
 import com.kdw.wb.error.ErrorCode;

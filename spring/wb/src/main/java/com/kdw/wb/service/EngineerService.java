@@ -3,13 +3,10 @@ package com.kdw.wb.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import com.kdw.wb.domain.company.Company;
 import com.kdw.wb.domain.contract.ContractInfo;
 import com.kdw.wb.domain.engineer.Engineer;
 import com.kdw.wb.domain.engineer.EngineerType;
-import com.kdw.wb.domain.sales.Sales;
 
 public interface EngineerService {
 

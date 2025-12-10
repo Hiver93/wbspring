@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kdw.wb.domain.contract.ContractInfo;
-import com.kdw.wb.domain.engineer.EngineerType;
-import com.kdw.wb.domain.sales.SalesStatus;
 import com.kdw.wb.dto.legacy.ResDto;
 import com.kdw.wb.dto.response.WhiteboardResDto;
 import com.kdw.wb.error.ErrorCode;
@@ -21,7 +19,6 @@ import com.kdw.wb.service.ContractService;
 import com.kdw.wb.service.EngineerService;
 import com.kdw.wb.service.FileService;
 import com.kdw.wb.service.SalesService;
-import com.kdw.wb.util.TimeFormatUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,7 +31,6 @@ public class WhiteboardFacade {
 	private final EngineerService engineerService;
 	private final CompanyService companyService;
 	private final ContractService contractService;
-	private final TimeFormatUtil timeFormatUtil;
 
 	public List<ResDto.OverviewItem> getOverviewLegacy(){
 		if(!authService.isAuthenticated()) {

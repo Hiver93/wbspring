@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.kdw.wb.domain.company.Company;
 import com.kdw.wb.domain.contract.ContractInfo;
-import com.kdw.wb.domain.engineer.Engineer;
 import com.kdw.wb.error.ErrorCode;
 import com.kdw.wb.error.WhiteboardException;
 import com.kdw.wb.repository.CompanyRepository;
