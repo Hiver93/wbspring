@@ -27,6 +27,7 @@ public enum ErrorCode {
 	
 	PASSKEY_REQUIRED(HttpStatus.BAD_REQUEST, "パスキーが必要です", "passkey is required"),
 	FILE_REQUIRED(HttpStatus.BAD_REQUEST, "ファイルが添付されていません", "file is required"),
+	INVALID_INTEGER_VALUE(HttpStatus.BAD_REQUEST, "入力された番号を確認してください", "the value is not a integer value"),
 	
 	UNKNOWN_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "システムエラーが発生しました。管理者にお問い合わせください", "unknown server error")
 	;

@@ -2,19 +2,19 @@ package com.kdw.wb.service.impl;
 
 import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.kdw.wb.domain.company.Company;
 import com.kdw.wb.domain.contract.ContractInfo;
 import com.kdw.wb.domain.engineer.Engineer;
 import com.kdw.wb.domain.engineer.EngineerType;
-import com.kdw.wb.domain.sales.Sales;
 import com.kdw.wb.error.ErrorCode;
 import com.kdw.wb.error.WhiteboardException;
 import com.kdw.wb.repository.EngineerRepository;
@@ -29,42 +29,12 @@ public class EngineerServiceImple implements EngineerService{
 	
 	private final EngineerRepository engineerRepository;
 	private final EngineerTypeRepository engineerTypeRepository;
-	
 	@Override
 	public Engineer createEngineer(Integer id, String name, EngineerType engineerType, Boolean companyHouse) {
 		Engineer engineer = Engineer.builder().id(id).name(name).type(engineerType).companyHouse(companyHouse).build();
 		return this.engineerRepository.save(engineer);
 	}
 
-	@Override
-	public void modifyEngineer(Integer engineerId, String name, Company company, Sales sales) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Engineer getEngineer(Integer engineerId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Engineer> getEngineerListByCompany() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Engineer> getEngineerListBySales() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void removeEngineer(Integer engineerId) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public EngineerType getEngineerType(String typeName) {
@@ -131,6 +101,35 @@ public class EngineerServiceImple implements EngineerService{
 			});
 		
 		});
+	}
+
+
+	@Override
+	public Engineer getEngineer(Integer engineerId) {
+		return this.engineerRepository.findById(engineerId).orElseThrow(()->{throw new WhiteboardException(ErrorCode.ENGINEER_NOT_FOUND, engineerId.toString());});
+	}
+
+
+	@Override
+	public List<Engineer> searchEngineer(String keyword, String target) {
+		List<Engineer> engineerList = null;
+		if(keyword.length() == 0) {
+			engineerList = new ArrayList<>();
+		}
+		else if(target.equals("id")) {
+			engineerList = new ArrayList<>();
+			if(!keyword.chars().allMatch(Character::isDigit)) {
+				throw new WhiteboardException(ErrorCode.INVALID_INTEGER_VALUE);
+			}
+			Optional<Engineer> optional = this.engineerRepository.findById(Integer.valueOf(keyword));
+			if(optional.isPresent()) {
+				engineerList.add(optional.get());
+			}
+		}
+		else if(target.equals("name")) {
+			engineerList = this.engineerRepository.findAllByNameContaining(keyword);
+		}
+		return engineerList;
 	}
 
 }
