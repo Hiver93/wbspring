@@ -18,7 +18,7 @@ public class WhiteboardResDto {
 			List<SalesItem> salesList
 			) {
 		
-		public static Overview from(List<Engineer> engineerList, List<Sales> salesList) {
+		public static Overview from(List<Engineer> engineerList, List<Sales> salesList, LocalDate date) {
 			List<SalesItem> salesItemList = salesList.stream()
 		            .map(SalesItem::from)
 		            .sorted((s1, s2) -> {
@@ -32,7 +32,7 @@ public class WhiteboardResDto {
 		            })
 		            .toList();
 
-		    return new Overview(Summary.from(engineerList), salesItemList);
+		    return new Overview(Summary.from(engineerList, date), salesItemList);
 		}
 		private record Summary(
 				String date,
@@ -63,9 +63,15 @@ public class WhiteboardResDto {
 	            Integer deploymentChanges,
 	            Integer weekOverWeekChange
 				) {
-			private static Summary from(List<Engineer> engineerList) {
-				LocalDate today = LocalDate.now();
-				String date = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+			private static Summary from(List<Engineer> engineerList, LocalDate date) {
+				LocalDate today;
+				if(date == null) {
+					today = LocalDate.now();
+				}
+				else {
+					today = date;
+				}
+				String dateStr = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 			
 				// 현재인원 : 취없일 정보 x, 취업일이 해당 날과 같거나 빠름, 퇴사일이 해당일보다 늦음
 				List<Engineer> currentEngineerList = engineerList.stream().filter(e->e.isEmployed(today)).toList();
@@ -159,7 +165,7 @@ public class WhiteboardResDto {
 	            Integer deploymentChanges = 0;
 	            Integer weekOverWeekChange = 0;
 	            
-				return new Summary(date, currentHeadCount, endOfMonthHeadCount, endOfNextMonthHeadCount, geCount, remainingEntriesThisMonth, remainingExitsThisMonth, standbyCount, standbyUndecidedCount, standbyGeCount, returneesThisMonth, shiftDecidedCount, shiftExtensionCount, transferCount, resignedCount, shiftUndecidedDecisions, joinThisMonth, decidedJoinThisMonth, joinNextMonth, shiftDecidedJoinNextMonth, deploymentChanges, weekOverWeekChange);
+				return new Summary(dateStr, currentHeadCount, endOfMonthHeadCount, endOfNextMonthHeadCount, geCount, remainingEntriesThisMonth, remainingExitsThisMonth, standbyCount, standbyUndecidedCount, standbyGeCount, returneesThisMonth, shiftDecidedCount, shiftExtensionCount, transferCount, resignedCount, shiftUndecidedDecisions, joinThisMonth, decidedJoinThisMonth, joinNextMonth, shiftDecidedJoinNextMonth, deploymentChanges, weekOverWeekChange);
 			}
 		}
 		

@@ -1,5 +1,6 @@
 package com.kdw.wb.facade;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.kdw.wb.domain.contract.ContractInfo;
 import com.kdw.wb.dto.legacy.ResDto;
+import com.kdw.wb.dto.request.WhiteboardReqDto;
 import com.kdw.wb.dto.response.WhiteboardResDto;
 import com.kdw.wb.error.ErrorCode;
 import com.kdw.wb.error.WhiteboardException;
@@ -41,11 +43,12 @@ public class WhiteboardFacade {
 		return list;
 	}
 	
-	public WhiteboardResDto.Overview getOverview(){
+	public WhiteboardResDto.Overview getOverview(WhiteboardReqDto.Get dto){
 		if(!authService.isAuthenticated()) {
 			throw new WhiteboardException(ErrorCode.AUTHENTICATION_REQUIRED);
 		}
-		WhiteboardResDto.Overview overview = WhiteboardResDto.Overview.from(this.engineerService.getEngineerList(), this.salesService.getSalesList());
+		
+		WhiteboardResDto.Overview overview = WhiteboardResDto.Overview.from(this.engineerService.getEngineerList(), this.salesService.getSalesList(), dto.getDate());
 		return overview;
 	}
 	
