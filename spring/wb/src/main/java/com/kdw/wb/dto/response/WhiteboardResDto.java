@@ -99,7 +99,9 @@ public class WhiteboardResDto {
 						
 				// 월내퇴장(남은인원) : 이번달에 계약이 끝나고, 계약이 끝나는 날이 오늘 이후인 엔지니어 (시프트 결정은 포함하지 않음)
 				Integer remainingExitsThisMonth = (int)engineerList.stream().filter(e->
-					!e.hasContract(YearMonth.from(today).plusMonths(1).atDay(1)) && e.hasContract(today)
+					e.isRetuneeAt(YearMonth.from(today))
+					&& !e.hasContract(YearMonth.from(today).plusMonths(1).atDay(1)) 
+					&& e.hasContract(today)
 				).count();
 				
 				

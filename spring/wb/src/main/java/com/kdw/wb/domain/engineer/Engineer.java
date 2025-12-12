@@ -125,6 +125,11 @@ public class Engineer  implements Persistable<Integer>  {
 	public void setLeavingDate(LocalDateTime leavingDate) {
 		this.leavingDate = leavingDate;
 	}
+	
+	// 작성필요
+	public List<String> getStatusList(){
+		return new ArrayList<>();
+	}
 
 	@Override
 	public boolean isNew() {

@@ -48,6 +48,4 @@ public class Sales {
 		this.name = name;
 		this.status = status;
 	}
-	
-	
 }
