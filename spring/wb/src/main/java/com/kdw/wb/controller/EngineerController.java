@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,7 +27,7 @@ public class EngineerController {
 	
 	@PatchMapping("/returnees")
 	public ResponseEntity<BaseResBody<Void>> updateRetunee(
-			@RequestParam("file") MultipartFile file){
+			@RequestPart("file") MultipartFile file){
 		this.engineerFacade.updateReturnees(file, LocalDateTime.now());
 		return new BaseResBody<Void>(null,"成功的に反映されました。").toResponse(HttpStatus.OK);
 	}

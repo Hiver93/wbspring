@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.kdw.wb.domain.contract.Contract;
@@ -26,7 +27,7 @@ import lombok.NoArgsConstructor;
 @EntityListeners(value = AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor
-public class Engineer {
+public class Engineer  implements Persistable<Integer>  {
 	@Id
 	private Integer id;
 	@Column
@@ -109,7 +110,7 @@ public class Engineer {
 	}
 	
 	public boolean isRetuneeAt(YearMonth month) {
-		return this.contractList.stream().anyMatch(c->c.isOver(month));
+		return this.contractList.stream().anyMatch(c->c.isOver(month)&&!c.getExtension());
 	}
 	
 	private List<Contract> getContractOfTerminatedThisMonth(YearMonth month) {
@@ -123,5 +124,10 @@ public class Engineer {
 	
 	public void setLeavingDate(LocalDateTime leavingDate) {
 		this.leavingDate = leavingDate;
+	}
+
+	@Override
+	public boolean isNew() {
+		return this.updatedAt == null;
 	}
 }

@@ -68,12 +68,6 @@ public class EngineerServiceImple implements EngineerService{
 					.type(engineerTypeMap.get(info.getType()))
 					.companyHouse(info.getCompanyHouse().equals("有"))
 					.build())
-			.collect(Collectors.toMap(
-			        Engineer::getId,  
-			        user -> user,          
-			        (oldValue, newValue) -> oldValue 
-			    ))
-			.values().stream()
 			.toList();
 		
 		this.engineerRepository.saveAll(engineerList);

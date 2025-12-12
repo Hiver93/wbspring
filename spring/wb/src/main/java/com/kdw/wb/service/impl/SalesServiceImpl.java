@@ -77,12 +77,6 @@ public class SalesServiceImpl implements SalesService{
 					.name(info.getSalesName())
 					.status(salesStatus)
 					.build())
-			.collect(Collectors.toMap(
-			        Sales::getId,  
-			        user -> user,          
-			        (oldValue, newValue) -> oldValue 
-			    ))
-			.values().stream()
 			.toList();
 		
 		this.salesRepository.saveAll(salesList);

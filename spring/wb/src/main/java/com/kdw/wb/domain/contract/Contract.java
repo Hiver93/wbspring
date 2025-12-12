@@ -6,6 +6,7 @@ import java.time.YearMonth;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.kdw.wb.domain.company.Company;
@@ -27,7 +28,7 @@ import lombok.NoArgsConstructor;
 @EntityListeners(value = AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor
-public class Contract {
+public class Contract  implements Persistable<Integer> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,7 +53,7 @@ public class Contract {
 	private LocalDateTime updatedAt;
 	@Builder
 	public Contract(Sales sales, Sales selfContracting, Engineer engineer, Company company, LocalDateTime startDate,
-			LocalDateTime endDate) {
+			LocalDateTime endDate)  {
 		super();
 		this.sales = sales;
 		this.selfContracting = selfContracting;
@@ -89,5 +90,10 @@ public class Contract {
 	
 	public void terminateAfterEndDate() {
 		this.extension = false;
+	}
+
+	@Override
+	public boolean isNew() {
+		return this.updatedAt == null;
 	}
 }

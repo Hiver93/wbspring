@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.kdw.wb.domain.contract.Contract;
@@ -27,9 +28,8 @@ import lombok.NoArgsConstructor;
 @EntityListeners(value = AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor
-public class Company {
+public class Company implements Persistable<Integer> {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	@Column
 	private String name;
@@ -41,10 +41,15 @@ public class Company {
 	private LocalDateTime createdAt;
 	@LastModifiedDate
 	private LocalDateTime updatedAt;
+	@Override
+    public boolean isNew() {
+        return this.updatedAt == null; 
+    }
 	
 	@Builder
 	public Company(Integer id, String name) {
 		super();
+		this.id = id;
 		this.name = name;
 	}
 	

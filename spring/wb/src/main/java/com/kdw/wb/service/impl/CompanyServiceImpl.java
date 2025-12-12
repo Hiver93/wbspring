@@ -76,12 +76,6 @@ public class CompanyServiceImpl implements CompanyService {
 					.id(Integer.valueOf(info.getCompanyId()))
 					.name(info.getCompanyName())
 					.build())
-			.collect(Collectors.toMap(
-			        Company::getId,  
-			        user -> user,          
-			        (oldValue, newValue) -> oldValue 
-			    ))
-			.values().stream()
 			.toList();
 		
 		this.companyRepository.saveAll(companyList);
