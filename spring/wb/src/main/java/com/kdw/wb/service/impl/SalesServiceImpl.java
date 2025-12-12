@@ -32,8 +32,7 @@ public class SalesServiceImpl implements SalesService{
 
 	@Override
 	public Sales getSales(Integer salesId) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.salesRepository.findById(salesId).orElseThrow(()->{throw new WhiteboardException(ErrorCode.SALES_NOT_FOUND, new StringBuilder().append('\n').append(salesId).toString());});
 	}
 
 	@Override

@@ -82,7 +82,9 @@ public class WhiteboardFacade {
 		this.salesService.ensureSales(salesInfoMap.entrySet().stream().map(Entry::getValue).toList());
 		this.companyService.ensureCompanies(companyInfoMap.entrySet().stream().map(Entry::getValue).toList());	
 		this.contractService.ensureContracts(
-				contractInfoList.stream().filter(info->!info.getCompanyId().equals("3729") && !info.getCompanyId().equals("3906") && !info.getCompanyId().equals("406"))
+				contractInfoList.stream().filter(info->!info.getCompanyId().equals("3729") 
+						&& !info.getCompanyId().equals("3906") 
+						&& !info.getCompanyId().equals("406"))
 				.toList()
 				);
 		
