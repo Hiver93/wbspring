@@ -22,18 +22,21 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(WhiteboardException.class)
 	public ResponseEntity<BaseResBody<BaseErrorData>> handleException(WhiteboardException ex){
-		return new BaseResBody<>(new BaseErrorData(ex.getErrorCode()), ex.getMessage())
+		log.info(ex.getMessage(), ex);
+		return new BaseResBody<>(new BaseErrorData(ex.getErrorCode()), new StringBuilder().append(ex.getMessage()).append('\n').append(ex.getExtraMessage()).toString())
 				.toResponse(ex.getStatus());
 	}
 	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<BaseResBody<BaseErrorData>> handleException(MethodArgumentNotValidException ex){
+		log.warn(ex.getMessage(), ex);
 		return new BaseResBody<>(new BaseErrorData(ex.getFieldError().getDefaultMessage()), "システムエラーが発生しました。管理者にお問い合わせください")
 				.toResponse(HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	public ResponseEntity<BaseResBody<BaseErrorData>> handleException(MethodArgumentTypeMismatchException ex){
+		log.warn(ex.getMessage(), ex);
 		return new BaseResBody<>(new BaseErrorData(ex.getPropertyName() + " require " + ex.getRequiredType().getSimpleName()), 
 				"システムエラーが発生しました。管理者にお問い合わせください")
 				.toResponse(HttpStatus.BAD_REQUEST);
@@ -41,6 +44,7 @@ public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<BaseResBody<BaseErrorData>> handleException(HttpMessageNotReadableException ex){
+		log.warn(ex.getMessage(), ex);
 		return new BaseResBody<>(new BaseErrorData("invalid request body. check format"),
 				"システムエラーが発生しました。管理者にお問い合わせください")
 				.toResponse(HttpStatus.BAD_REQUEST);
@@ -48,6 +52,7 @@ public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(MissingServletRequestParameterException.class)
 	public ResponseEntity<BaseResBody<BaseErrorData>> handleException(MissingServletRequestParameterException ex){
+		log.warn(ex.getMessage(), ex);
 		return new BaseResBody<>(new BaseErrorData(ex.getMessage()), 
 				"システムエラーが発生しました。管理者にお問い合わせください")
 				.toResponse(HttpStatus.BAD_REQUEST);
@@ -55,6 +60,7 @@ public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
 	public ResponseEntity<BaseResBody<BaseErrorData>> handleException(HttpRequestMethodNotSupportedException ex){
+		log.warn(ex.getMessage(), ex);
 		return new BaseResBody<>(new BaseErrorData(ex.getMessage()),
 				"システムエラーが発生しました。管理者にお問い合わせください")
 				.toResponse(HttpStatus.BAD_REQUEST);
@@ -62,6 +68,7 @@ public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(NoResourceFoundException.class)
 	public ResponseEntity<BaseResBody<BaseErrorData>> handleException(NoResourceFoundException ex){
+		log.warn(ex.getMessage(), ex);
 		return new BaseResBody<>(new BaseErrorData("check url"), 
 				"システムエラーが発生しました。管理者にお問い合わせください")
 				.toResponse(HttpStatus.NOT_FOUND);
@@ -69,6 +76,7 @@ public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(MultipartException.class)
 	public ResponseEntity<BaseResBody<BaseErrorData>> handleException(MultipartException ex){
+		log.warn(ex.getMessage(), ex);
 		return new BaseResBody<>(new BaseErrorData(ex.getMessage()), 
 				"システムエラーが発生しました。管理者にお問い合わせください")
 				.toResponse(HttpStatus.BAD_REQUEST);
